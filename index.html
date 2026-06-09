@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutPerformance — Sistema de Monitoramento Esportivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ── Reset & base ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #f0f2f5;
+  color: #1a1d23;
+}
+
+/* ── Tokens ────────────────────────────────────────────────── */
+:root {
+  --green-900: #0d3318;
+  --green-800: #1b5e20;
+  --green-700: #2e7d32;
+  --green-600: #388e3c;
+  --green-400: #66bb6a;
+  --green-100: #c8e6c9;
+  --green-50:  #e8f5e9;
+  --yellow-700: #f57f17;
+  --yellow-50:  #fffde7;
+  --red-700:  #c62828;
+  --red-50:   #ffebee;
+  --blue-700: #1565c0;
+  --blue-50:  #e3f2fd;
+  --purple-700: #6a1b9a;
+  --surface:  #ffffff;
+  --surface-2: #f7f8fa;
+  --border:   #e2e5ea;
+  --border-strong: #c5cbd5;
+  --text-1:   #1a1d23;
+  --text-2:   #4a5568;
+  --text-3:   #8492a6;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+}
+
+/* ── Layout ────────────────────────────────────────────────── */
+.app        { display: flex; height: 100vh; overflow: hidden; }
+.sidebar    { width: 220px; flex-shrink: 0; background: var(--green-900); display: flex; flex-direction: column; overflow-y: auto; }
+.main       { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar     { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.content    { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+.brand      { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,.10); }
+.brand-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.brand-icon { width: 36px; height: 36px; background: var(--green-700); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.brand-name { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: .02em; line-height: 1; }
+.brand-sub  { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 2px; }
+
+.nav-group  { padding: 12px 0 4px; }
+.nav-label  { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); padding: 0 16px 6px; }
+.nav-item   { display: flex; align-items: center; gap: 9px; padding: 9px 16px; cursor: pointer; color: rgba(255,255,255,.65); font-size: 13px; font-weight: 400; transition: all .15s; border-left: 3px solid transparent; position: relative; }
+.nav-item:hover  { background: rgba(255,255,255,.07); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,.12); color: #fff; border-left-color: var(--green-400); font-weight: 500; }
+.nav-item .ti   { font-size: 17px; flex-shrink: 0; }
+
+/* ── Topbar ────────────────────────────────────────────────── */
+.topbar h1  { font-size: 17px; font-weight: 600; color: var(--text-1); }
+.topbar-meta { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 12px; }
+.season-badge { background: var(--green-50); color: var(--green-700); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn        { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; font-family: inherit; }
+.btn:hover  { background: var(--surface-2); }
+.btn.primary { background: var(--green-700); color: #fff; border-color: var(--green-700); }
+.btn.primary:hover { background: var(--green-800); border-color: var(--green-800); }
+.btn .ti    { font-size: 16px; }
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.card       { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-sm); }
+.card-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+.card-title .ti { color: var(--green-700); font-size: 17px; }
+
+/* ── Metric cards ──────────────────────────────────────────── */
+.metric-card  { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; }
+.metric-label { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
+.metric-value { font-size: 26px; font-weight: 600; line-height: 1; color: var(--text-1); }
+.metric-sub   { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.metric-up    { color: var(--green-700); }
+.metric-down  { color: var(--red-700); }
+
+/* ── Grid ──────────────────────────────────────────────────── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.g2i { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mb12 { margin-bottom: 12px; }
+.mb16 { margin-bottom: 16px; }
+.mb20 { margin-bottom: 20px; }
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge      { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+.badge-green  { background: var(--green-50);  color: var(--green-800); }
+.badge-yellow { background: var(--yellow-50); color: var(--yellow-700); }
+.badge-red    { background: var(--red-50);    color: var(--red-700); }
+.badge-blue   { background: var(--blue-50);   color: var(--blue-700); }
+.badge-gray   { background: #f0f2f5; color: var(--text-2); }
+
+/* ── Tables ────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+table       { width: 100%; border-collapse: collapse; font-size: 13px; }
+th          { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; padding: 8px 12px; border-bottom: 2px solid var(--border); text-align: left; white-space: nowrap; background: var(--surface-2); }
+td          { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-1); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface-2); }
+tfoot td    { border-top: 2px solid var(--border); font-weight: 600; border-bottom: none; }
+
+/* ── Forms ─────────────────────────────────────────────────── */
+.form-group   { margin-bottom: 14px; }
+.form-label   { display: block; font-size: 12px; font-weight: 500; color: var(--text-2); margin-bottom: 5px; }
+input, select, textarea {
+  width: 100%; padding: 8px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-1);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color .15s;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--green-700); box-shadow: 0 0 0 3px rgba(46,125,50,.12); }
+textarea { min-height: 80px; resize: vertical; }
+
+/* ── Progress bar ──────────────────────────────────────────── */
+.prog-bar   { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 5px; }
+.prog-fill  { height: 100%; border-radius: 3px; background: var(--green-700); transition: width .5s ease; }
+
+/* ── Tab bar ───────────────────────────────────────────────── */
+.tab-bar    { display: flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 3px; margin-bottom: 20px; width: fit-content; }
+.tab        { padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 400; color: var(--text-2); transition: all .15s; border: none; background: transparent; font-family: inherit; }
+.tab.active { background: var(--surface); color: var(--text-1); font-weight: 500; box-shadow: var(--shadow-sm); }
+
+/* ── Alerts ────────────────────────────────────────────────── */
+.alert      { padding: 11px 14px; border-radius: var(--radius-md); font-size: 13px; display: flex; align-items: flex-start; gap: 9px; }
+.alert .ti  { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.alert-warn { background: var(--yellow-50); color: #5d3f00; border: 1px solid #ffe082; }
+.alert-ok   { background: var(--green-50);  color: var(--green-800); border: 1px solid var(--green-100); }
+.alert-err  { background: var(--red-50);    color: var(--red-700);   border: 1px solid #ef9a9a; }
+.alert-info { background: var(--blue-50);   color: var(--blue-700);  border: 1px solid #90caf9; }
+
+/* ── Section header ────────────────────────────────────────── */
+.section-header      { margin-bottom: 18px; }
+.section-header h2   { font-size: 18px; font-weight: 600; }
+.section-header p    { font-size: 13px; color: var(--text-2); margin-top: 3px; }
+
+/* ── Athlete avatar ────────────────────────────────────────── */
+.avatar     { width: 34px; height: 34px; border-radius: 50%; background: var(--green-50); color: var(--green-700); font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid var(--green-100); }
+.avatar-lg  { width: 48px; height: 48px; font-size: 17px; }
+
+/* ── Wellbeing ─────────────────────────────────────────────── */
+.wb-row     { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.wb-row:last-child { border-bottom: none; }
+.wb-label   { flex: 0 0 160px; font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.wb-label .ti { font-size: 15px; }
+.rating-btns { display: flex; gap: 5px; }
+.rating-btn  { width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-2); transition: all .12s; font-family: inherit; }
+.rating-btn:hover { border-color: var(--green-600); color: var(--green-700); }
+.rating-btn.active { background: var(--green-700); color: #fff; border-color: var(--green-700); }
+.igp-score  { font-size: 56px; font-weight: 700; line-height: 1; font-family: 'Barlow Condensed', sans-serif; }
+
+/* ── Carga ─────────────────────────────────────────────────── */
+.carga-calc { padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; color: var(--text-2); min-height: 44px; }
+
+/* ── Presença grid ─────────────────────────────────────────── */
+.pres-cell  { text-align: center; min-width: 46px; }
+
+/* ── Report ────────────────────────────────────────────────── */
+.report-header { background: linear-gradient(135deg, var(--green-900), var(--green-700)); padding: 20px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin: -18px -20px 18px; }
+.report-header h2 { color: #fff; font-size: 18px; font-weight: 600; }
+.report-header p  { color: rgba(255,255,255,.65); font-size: 12px; margin-top: 3px; }
+
+/* ── Modal / overlay (no fixed positioning) ─────────────────── */
+.modal-wrap { background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; min-height: 400px; border-radius: var(--radius-lg); }
+.modal-box  { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; width: 480px; max-width: 100%; box-shadow: var(--shadow-md); }
+
+/* ── Ramp stripe ───────────────────────────────────────────── */
+.rpe-bar    { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.rpe-bar div { flex: 1; }
+
+/* ── Hidden ────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ── Print ─────────────────────────────────────────────────── */
+@media print {
+  .sidebar, .topbar { display: none; }
+  .main { overflow: visible; }
+  .content { padding: 0; overflow: visible; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+  #modal-atleta { display: none !important; }
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .g4 { grid-template-columns: 1fr 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .g4, .g3 { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-icon">⚽</div>
+        <span class="brand-name">FutPerformance</span>
+      </div>
+      <div class="brand-sub">Sistema de Monitoramento Esportivo</div>
+    </div>
+
+    <nav class="nav-group">
+      <div class="nav-label">Visão geral</div>
+      <div class="nav-item active" data-page="dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+      <div class="nav-item" data-page="atletas"><i class="ti ti-users"></i>Atletas</div>
+    </nav>
+    <nav class="nav-group">
+      <div class="nav-label">Avaliações</div>
+      <div class="nav-item" data-page="avaliacao"><i class="ti ti-clipboard-list"></i>Avaliação física</div>
+      <div class="nav-item" data-page="wellbeing"><i class="ti ti-heart-rate-monitor"></i>Bem-estar diário</div>
+    </nav>
+    <nav class="nav-group">
+      <div class="nav-label">Monitoramento</div>
+      <div class="nav-item" data-page="carga"><i class="ti ti-activity"></i>Controle de carga</div>
+      <div class="nav-item" data-page="presenca"><i class="ti ti-calendar-check"></i>Presença</div>
+      <div class="nav-item" data-page="lesoes"><i class="ti ti-stethoscope"></i>Lesões</div>
+    </nav>
+    <nav class="nav-group">
+      <div class="nav-label">Relatórios</div>
+      <div class="nav-item" data-page="relatorio"><i class="ti ti-file-analytics"></i>Relatório individual</div>
+    </nav>
+
+    <div style="padding:16px;margin-top:auto;border-top:1px solid rgba(255,255,255,.10)">
+      <div style="font-size:11px;color:rgba(255,255,255,.3);line-height:1.6">
+        Ref.: A. C. Gomes · J. P. Medina<br>J. A. Rodrigues · Foster RPE
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────────────── -->
+  <main class="main">
+    <div class="topbar">
+      <h1 id="page-title">Dashboard</h1>
+      <div class="topbar-meta">
+        <span class="season-badge">Temporada 2025</span>
+        <span id="current-date"></span>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- ── MODAL: novo atleta ────────────────────────────────────── -->
+<div id="modal-atleta" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:16px;font-weight:600">Novo atleta</h3>
+      <button class="btn" onclick="closeModal()" style="padding:4px 8px"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="g2i">
+      <div class="form-group"><label class="form-label">Nome completo</label><input id="m-nome" placeholder="Carlos Silva"></div>
+      <div class="form-group"><label class="form-label">Data de nascimento</label><input id="m-nasc" type="date"></div>
+      <div class="form-group"><label class="form-label">Posição</label>
+        <select id="m-pos"><option>GOL</option><option>ZAG</option><option>LD</option><option>LE</option><option>VOL</option><option>MC</option><option selected>MEI</option><option>PE</option><option>PD</option><option>ATA</option><option>SA</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Pé dominante</label>
+        <select id="m-pe"><option>Direito</option><option>Esquerdo</option><option>Ambos</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Peso (kg)</label><input id="m-peso" type="number" step="0.1" placeholder="75.0"></div>
+      <div class="form-group"><label class="form-label">Altura (cm)</label><input id="m-alt" type="number" placeholder="178"></div>
+      <div class="form-group"><label class="form-label">% Gordura</label><input id="m-gord" type="number" step="0.1" placeholder="12.5"></div>
+      <div class="form-group"><label class="form-label">Telefone / WhatsApp</label><input id="m-tel" placeholder="(11) 99999-9999"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn primary" onclick="saveAtleta()"><i class="ti ti-check"></i>Salvar atleta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: registrar lesão ────────────────────────────────── -->
+<div id="modal-lesao" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:16px;font-weight:600">Registrar lesão</h3>
+      <button class="btn" onclick="document.getElementById('modal-lesao').classList.add('hidden')" style="padding:4px 8px"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-group"><label class="form-label">Atleta</label>
+      <select id="l-atleta"></select>
+    </div>
+    <div class="g2i">
+      <div class="form-group"><label class="form-label">Data início</label><input id="l-inicio" type="date"></div>
+      <div class="form-group"><label class="form-label">Data retorno (se já ocorreu)</label><input id="l-retorno" type="date"></div>
+      <div class="form-group"><label class="form-label">Região corporal</label>
+        <select id="l-regiao"><option>Joelho</option><option>Tornozelo</option><option>Coxa</option><option>Panturrilha</option><option>Lombar</option><option>Ombro</option><option>Quadril</option><option>Outros</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Tipo</label>
+        <select id="l-tipo"><option>Muscular</option><option>Ligamentar</option><option>Óssea</option><option>Contusão</option><option>Sobrecarga</option><option>Outros</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Mecanismo</label>
+        <select id="l-mec"><option>Contato</option><option>Sem contato</option><option>Overuse</option><option>Recidiva</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Lado</label>
+        <select id="l-lado"><option>Direito</option><option>Esquerdo</option><option>Bilateral</option><option>N/A</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Observações</label><textarea id="l-obs" placeholder="Detalhes sobre a lesão, tratamento, etc."></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="document.getElementById('modal-lesao').classList.add('hidden')">Cancelar</button>
+      <button class="btn primary" onclick="saveLesao()"><i class="ti ti-check"></i>Registrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA STORE ────────────────────────────────────────────────
+const DB = {
+  atletas: [
+    {id:'ATL001',nome:'Carlos Silva',   pos:'ATA',nasc:'2001-03-14',peso:73.5,altura:178,gord:12.1,pe:'Direito',tel:'(11) 98000-0001',status:'Ativo'},
+    {id:'ATL002',nome:'Marcos Oliveira',pos:'VOL',nasc:'1998-07-22',peso:78.2,altura:182,gord:10.8,pe:'Direito',tel:'(11) 98000-0002',status:'Ativo'},
+    {id:'ATL003',nome:'Rafael Santos',  pos:'ZAG',nasc:'2003-01-05',peso:82.0,altura:185,gord:14.3,pe:'Direito',tel:'(11) 98000-0003',status:'Ativo'},
+    {id:'ATL004',nome:'Pedro Alves',    pos:'LD', nasc:'2000-11-30',peso:71.8,altura:174,gord:11.5,pe:'Direito',tel:'(11) 98000-0004',status:'Lesionado'},
+    {id:'ATL005',nome:'Lucas Pereira',  pos:'MEI',nasc:'2002-05-19',peso:69.4,altura:172,gord:9.7, pe:'Esquerdo',tel:'(11) 98000-0005',status:'Ativo'},
+  ],
+  wellbeing: {
+    'ATL001':{sono:4,fadiga:3,dor:4,motivacao:5,estresse:4},
+    'ATL002':{sono:3,fadiga:2,dor:3,motivacao:4,estresse:3},
+    'ATL003':{sono:5,fadiga:5,dor:5,motivacao:5,estresse:5},
+    'ATL004':{sono:2,fadiga:1,dor:2,motivacao:3,estresse:2},
+    'ATL005':{sono:4,fadiga:4,dor:4,motivacao:5,estresse:4},
+  },
+  avaliacoes: {
+    'ATL001':{bip:[1240,1360,1480,1520],s10:[1.92,1.88,1.85,1.82],s30:[4.31,4.22,4.15,4.10],salto:[195,202,208,212],prancha:[85,95,105,110],gord:[14.2,13.1,12.4,12.1],peso:[76.0,74.5,73.8,73.5]},
+    'ATL002':{bip:[1400,1480,1560,1600],s10:[1.85,1.82,1.79,1.77],s30:[4.18,4.10,4.05,4.01],salto:[205,210,215,218],prancha:[95,105,115,120],gord:[12.5,11.8,11.2,10.8],peso:[80.1,79.0,78.5,78.2]},
+    'ATL005':{bip:[1120,1200,1300,1380],s10:[1.98,1.94,1.91,1.88],s30:[4.45,4.38,4.30,4.24],salto:[185,192,198,204],prancha:[75,85,92,98],gord:[11.2,10.8,10.1,9.7],peso:[70.5,70.0,69.7,69.4]},
+  },
+  presenca: {
+    'ATL001':[1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1],
+    'ATL002':[1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1],
+    'ATL003':[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    'ATL004':[1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    'ATL005':[1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0],
+  },
+  treinoDatas:['Seg 31/03','Ter 01/04','Qui 03/04','Sáb 05/04','Seg 07/04','Ter 08/04','Qui 10/04','Sáb 12/04','Seg 14/04','Ter 15/04','Qui 17/04','Sáb 19/04','Seg 21/04','Ter 22/04','Qui 24/04','Sáb 26/04'],
+  cargaSemana:[
+    {dia:'Segunda',tipo:'Físico',dur:75,rpe:7},
+    {dia:'Terça',  tipo:'Técnico/Tático',dur:90,rpe:6},
+    {dia:'Quinta', tipo:'Técnico/Tático',dur:90,rpe:5},
+    {dia:'Sábado', tipo:'Amistoso',dur:95,rpe:8},
+  ],
+  lesoes:[
+    {atleta:'Pedro Alves',   inicio:'2025-05-10',retorno:'—',     regiao:'Tornozelo esq.',tipo:'Ligamentar',mec:'Contato',status:'Em tratamento'},
+    {atleta:'Carlos Silva',  inicio:'2025-03-15',retorno:'2025-03-28',regiao:'Panturrilha dir.',tipo:'Muscular',mec:'Sem contato',status:'Recuperado'},
+  ],
+  nextId: 6,
+};
+
+// Load from localStorage if present
+try {
+  const saved = localStorage.getItem('futperf_db');
+  if (saved) Object.assign(DB, JSON.parse(saved));
+} catch(e) {}
+
+function saveDB() {
+  try { localStorage.setItem('futperf_db', JSON.stringify(DB)); } catch(e) {}
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+const SEMANAS = ['Sem. 0','Sem. 4','Sem. 8','Sem. 12'];
+const COLORS   = ['#2e7d32','#1565c0','#6a1b9a','#e65100','#00695c'];
+
+function initials(n){ return n.split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
+function idade(nasc){ const d=new Date(nasc); const now=new Date(); let a=now.getFullYear()-d.getFullYear(); if(now<new Date(now.getFullYear(),d.getMonth(),d.getDate())) a--; return a; }
+function presPct(arr){ if(!arr||!arr.length) return 0; return Math.round(arr.filter(x=>x).length/arr.length*100); }
+function igp(w){ if(!w) return 0; return Math.round((w.sono+w.fadiga+w.dor+w.motivacao+w.estresse)/25*100); }
+function igpLabel(v){ if(v>=80) return 'Prontidão total'; if(v>=60) return 'Prontidão moderada'; if(v>=40) return 'Prontidão reduzida'; return 'Prontidão crítica'; }
+function igpClass(v){ if(v>=80) return 'badge-green'; if(v>=60) return 'badge-yellow'; return 'badge-red'; }
+function igpColor(v){ if(v>=80) return 'var(--green-700)'; if(v>=60) return 'var(--yellow-700)'; return 'var(--red-700)'; }
+function statusClass(s){ return s==='Ativo'?'badge-green':s==='Lesionado'?'badge-red':'badge-gray'; }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){ if(!d||d==='—') return '—'; try{ return new Date(d+'T12:00:00').toLocaleDateString('pt-BR'); }catch(e){return d;} }
+
+let _charts = {};
+function destroyCharts(){ Object.values(_charts).forEach(c=>{try{c.destroy()}catch(e){}}); _charts={}; }
+function mkChart(id,cfg){ const el=document.getElementById(id); if(!el) return; _charts[id]=new Chart(el,cfg); }
+
+function buildAtletaOptions(sel){ DB.atletas.forEach(a=>{ const o=document.createElement('option'); o.value=a.id; o.textContent=a.nome+' ('+a.pos+')'; sel.appendChild(o); }); }
+
+// ── NAVIGATION ───────────────────────────────────────────────
+const PAGE_TITLES = {
+  dashboard:'Dashboard',atletas:'Atletas',avaliacao:'Avaliação física',
+  wellbeing:'Bem-estar diário',carga:'Controle de carga',
+  presenca:'Controle de presença',lesoes:'Histórico de lesões',
+  relatorio:'Relatório individual',
+};
+
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const pg = el.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('page-title').textContent = PAGE_TITLES[pg]||pg;
+    destroyCharts();
+    document.getElementById('content').innerHTML = render(pg);
+    afterRender(pg);
+  });
+});
+
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+
+// ── RENDER ───────────────────────────────────────────────────
+function render(pg){
+  const map = {dashboard:renderDashboard,atletas:renderAtletas,avaliacao:renderAvaliacao,wellbeing:renderWellbeing,carga:renderCarga,presenca:renderPresenca,lesoes:renderLesoes,relatorio:renderRelatorio};
+  return (map[pg]||renderDashboard)();
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────
+function renderDashboard(){
+  const ativos    = DB.atletas.filter(a=>a.status==='Ativo').length;
+  const lesionados= DB.atletas.filter(a=>a.status==='Lesionado').length;
+  const avgIgp    = DB.atletas.length ? Math.round(DB.atletas.reduce((s,a)=>s+igp(DB.wellbeing[a.id]),0)/DB.atletas.length) : 0;
+  const avgPres   = DB.atletas.length ? Math.round(DB.atletas.reduce((s,a)=>s+presPct(DB.presenca[a.id]),0)/DB.atletas.length) : 0;
+  const cargas    = DB.cargaSemana.map(s=>s.rpe*s.dur);
+  const totalUA   = cargas.reduce((a,b)=>a+b,0);
+
+  return `
+  <div class="g4 mb20">
+    <div class="metric-card"><div class="metric-label">Atletas ativos</div><div class="metric-value">${ativos}</div><div class="metric-sub">de ${DB.atletas.length} cadastrados</div></div>
+    <div class="metric-card"><div class="metric-label">Lesionados</div><div class="metric-value metric-down">${lesionados}</div><div class="metric-sub">afastados agora</div></div>
+    <div class="metric-card"><div class="metric-label">IGP médio hoje</div><div class="metric-value" style="color:${igpColor(avgIgp)}">${avgIgp}</div><div class="metric-sub">${igpLabel(avgIgp)}</div></div>
+    <div class="metric-card"><div class="metric-label">Presença média</div><div class="metric-value">${avgPres}%</div><div class="metric-sub">na temporada</div></div>
+  </div>
+
+  <div class="g2 mb16">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-heart-rate-monitor"></i>Prontidão hoje (IGP)</div>
+      <table>
+        <thead><tr><th>Atleta</th><th>Posição</th><th>IGP</th><th>Status</th></tr></thead>
+        <tbody>
+        ${DB.atletas.map(a=>{
+          const v=igp(DB.wellbeing[a.id]);
+          return `<tr>
+            <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">${initials(a.nome)}</div><div><div style="font-weight:500">${a.nome}</div><div style="font-size:11px;color:var(--text-3)">${a.id}</div></div></div></td>
+            <td>${a.pos}</td>
+            <td><strong style="color:${igpColor(v)}">${v}</strong></td>
+            <td><span class="badge ${igpClass(v)}">${igpLabel(v)}</span></td>
+          </tr>`;
+        }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-activity"></i>Carga semanal — sessões (UA)</div>
+      <div style="margin-bottom:8px;font-size:13px;color:var(--text-2)">Total: <strong>${totalUA} UA</strong></div>
+      <div style="position:relative;height:220px"><canvas id="ch-carga-dash" role="img" aria-label="Carga por sessão">Carga por sessão.</canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-chart-line"></i>Evolução BIP / Yo-Yo — equipe (metros percorridos)</div>
+    <div style="position:relative;height:200px"><canvas id="ch-bip-dash" role="img" aria-label="Evolução BIP por atleta">Evolução BIP.</canvas></div>
+  </div>`;
+}
+
+// ── ATLETAS ──────────────────────────────────────────────────
+function renderAtletas(){
+  return `
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn primary" onclick="document.getElementById('modal-atleta').classList.remove('hidden')"><i class="ti ti-user-plus"></i>Novo atleta</button>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Atleta</th><th>Posição</th><th>Idade</th><th>Peso</th><th>% Gordura</th><th>Presença</th><th>IGP hoje</th><th>Status</th><th>Contato</th></tr></thead>
+      <tbody>
+      ${DB.atletas.map(a=>{
+        const pp=presPct(DB.presenca[a.id]);
+        const v=igp(DB.wellbeing[a.id]);
+        return `<tr>
+          <td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">${initials(a.nome)}</div><div><div style="font-weight:500">${a.nome}</div><div style="font-size:11px;color:var(--text-3)">${a.id}</div></div></div></td>
+          <td><span class="badge badge-blue">${a.pos}</span></td>
+          <td>${idade(a.nasc)} anos</td>
+          <td>${a.peso} kg</td>
+          <td><span class="${a.gord>14?'metric-down':a.gord<10?'metric-up':''}">${a.gord}%</span></td>
+          <td><div style="font-weight:500">${pp}%</div><div class="prog-bar" style="width:80px"><div class="prog-fill" style="width:${pp}%;background:${pp>=80?'var(--green-700)':pp>=60?'var(--yellow-700)':'var(--red-700)'}"></div></div></td>
+          <td><span class="badge ${igpClass(v)}">${v}</span></td>
+          <td><span class="badge ${statusClass(a.status)}">${a.status}</span></td>
+          <td style="font-size:12px;color:var(--text-2)">${a.tel||'—'}</td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function saveAtleta(){
+  const nome=document.getElementById('m-nome').value.trim();
+  if(!nome){ alert('Informe o nome do atleta.'); return; }
+  const a={
+    id:'ATL'+String(DB.nextId++).padStart(3,'0'),
+    nome, pos:document.getElementById('m-pos').value,
+    nasc:document.getElementById('m-nasc').value,
+    peso:parseFloat(document.getElementById('m-peso').value)||0,
+    altura:parseInt(document.getElementById('m-alt').value)||0,
+    gord:parseFloat(document.getElementById('m-gord').value)||0,
+    pe:document.getElementById('m-pe').value,
+    tel:document.getElementById('m-tel').value,
+    status:'Ativo',
+  };
+  DB.atletas.push(a);
+  DB.wellbeing[a.id]={sono:3,fadiga:3,dor:3,motivacao:3,estresse:3};
+  DB.presenca[a.id]=[];
+  saveDB();
+  closeModal();
+  document.querySelector('[data-page="atletas"]').click();
+}
+function closeModal(){ document.getElementById('modal-atleta').classList.add('hidden'); }
+
+// ── AVALIAÇÃO ─────────────────────────────────────────────────
+let _avalTab='form';
+function renderAvaliacao(){
+  _avalTab='form';
+  return `
+  <div class="tab-bar">
+    <button class="tab active" id="tab-form" onclick="switchAvalTab('form')">Registrar avaliação</button>
+    <button class="tab" id="tab-ev" onclick="switchAvalTab('evolucao')">Evolução dos testes</button>
+  </div>
+
+  <div id="aval-form">
+    <div class="alert alert-warn mb16"><i class="ti ti-alert-triangle"></i>Sequência obrigatória: dados corporais → prancha → Illinois → sprint 10m → sprint 30m → BIP. Aquecimento mínimo de 10 min antes dos testes físicos.</div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-user"></i>Identificação</div>
+        <div class="form-group"><label class="form-label">Atleta</label>
+          <select id="av-atleta">${DB.atletas.map(a=>`<option value="${a.id}">${a.nome} (${a.pos})</option>`).join('')}</select>
+        </div>
+        <div class="form-group"><label class="form-label">Período de avaliação</label>
+          <select id="av-periodo"><option value="Sem. 0">Semana 0 — Avaliação inicial</option><option value="Sem. 4">Semana 4</option><option value="Sem. 8">Semana 8</option><option value="Sem. 12">Semana 12</option><option value="Sem. 16">Semana 16</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Data da avaliação</label><input type="date" id="av-data" value="${todayStr()}"></div>
+        <div class="form-group"><label class="form-label">Observações</label><textarea id="av-obs" placeholder="Limitações, condições do dia, dores relatadas..."></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-ruler-measure"></i>Dados corporais</div>
+        <div class="g2i">
+          <div class="form-group"><label class="form-label">Peso (kg)</label><input type="number" step="0.1" id="av-peso" placeholder="73.5"></div>
+          <div class="form-group"><label class="form-label">% Gordura</label><input type="number" step="0.1" id="av-gord" placeholder="12.1"></div>
+          <div class="form-group"><label class="form-label">Circ. cintura (cm)</label><input type="number" id="av-cin" placeholder="82"></div>
+          <div class="form-group"><label class="form-label">Circ. quadril (cm)</label><input type="number" id="av-quad" placeholder="97"></div>
+          <div class="form-group"><label class="form-label">Circ. coxa dom. (cm)</label><input type="number" id="av-coxa" placeholder="54"></div>
+          <div class="form-group"><label class="form-label">Circ. panturrilha (cm)</label><input type="number" id="av-pant" placeholder="36"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-run"></i>Testes físicos</div>
+        <div class="g2i">
+          <div class="form-group"><label class="form-label">Prancha isométrica (s)</label><input type="number" id="av-prancha" placeholder="95"></div>
+          <div class="form-group"><label class="form-label">Illinois (s)</label><input type="number" step="0.1" id="av-illinois" placeholder="15.8"></div>
+          <div class="form-group"><label class="form-label">Sprint 10m (s)</label><input type="number" step="0.01" id="av-s10" placeholder="1.88"></div>
+          <div class="form-group"><label class="form-label">Sprint 30m (s)</label><input type="number" step="0.01" id="av-s30" placeholder="4.15"></div>
+          <div class="form-group"><label class="form-label">Salto horizontal (cm)</label><input type="number" id="av-salto" placeholder="205"></div>
+          <div class="form-group"><label class="form-label">BIP / Yo-Yo (m)</label><input type="number" id="av-bip" placeholder="1360"></div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:10px">
+        <div class="card-title"><i class="ti ti-clipboard-check"></i>Referências de classificação</div>
+        <table>
+          <thead><tr><th>Teste</th><th>Excelente</th><th>Bom</th><th>Regular</th></tr></thead>
+          <tbody>
+            <tr><td>BIP</td><td>> 1800m</td><td>1400–1800m</td><td>1000–1400m</td></tr>
+            <tr><td>Sprint 10m</td><td>< 1,80s</td><td>1,80–1,99s</td><td>2,00–2,19s</td></tr>
+            <tr><td>Sprint 30m</td><td>< 4,00s</td><td>4,00–4,30s</td><td>4,31–4,60s</td></tr>
+            <tr><td>Salto horiz.</td><td>> 220cm</td><td>200–220cm</td><td>180–199cm</td></tr>
+            <tr><td>Prancha</td><td>> 120s</td><td>90–120s</td><td>60–89s</td></tr>
+          </tbody>
+        </table>
+        <button class="btn primary" style="margin-top:auto;justify-content:center" onclick="saveAvaliacao()"><i class="ti ti-device-floppy"></i>Salvar avaliação</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="aval-evolucao" class="hidden">
+    <div class="g2 mb16">
+      <div class="card"><div class="card-title"><i class="ti ti-run"></i>BIP / Yo-Yo (metros)</div><div style="position:relative;height:220px"><canvas id="ch-bip-ev" role="img" aria-label="Evolução BIP">Evolução BIP.</canvas></div></div>
+      <div class="card"><div class="card-title"><i class="ti ti-bolt"></i>Sprint 10m (s — menor é melhor)</div><div style="position:relative;height:220px"><canvas id="ch-s10-ev" role="img" aria-label="Evolução Sprint 10m">Evolução Sprint 10m.</canvas></div></div>
+      <div class="card"><div class="card-title"><i class="ti ti-bolt"></i>Sprint 30m (s — menor é melhor)</div><div style="position:relative;height:220px"><canvas id="ch-s30-ev" role="img" aria-label="Evolução Sprint 30m">Evolução Sprint 30m.</canvas></div></div>
+      <div class="card"><div class="card-title"><i class="ti ti-arrows-move"></i>Salto horizontal (cm)</div><div style="position:relative;height:220px"><canvas id="ch-salto-ev" role="img" aria-label="Evolução salto">Evolução salto.</canvas></div></div>
+      <div class="card"><div class="card-title"><i class="ti ti-body-scan"></i>Prancha isométrica (s)</div><div style="position:relative;height:220px"><canvas id="ch-prancha-ev" role="img" aria-label="Evolução prancha">Evolução prancha.</canvas></div></div>
+      <div class="card"><div class="card-title"><i class="ti ti-percentage"></i>% Gordura corporal</div><div style="position:relative;height:220px"><canvas id="ch-gord-ev" role="img" aria-label="Evolução gordura">Evolução gordura.</canvas></div></div>
+    </div>
+  </div>`;
+}
+
+function switchAvalTab(tab){
+  _avalTab=tab;
+  document.getElementById('tab-form').classList.toggle('active',tab==='form');
+  document.getElementById('tab-ev').classList.toggle('active',tab==='evolucao');
+  document.getElementById('aval-form').classList.toggle('hidden',tab!=='form');
+  document.getElementById('aval-evolucao').classList.toggle('hidden',tab!=='evolucao');
+  if(tab==='evolucao') buildAvalCharts();
+}
+
+function saveAvaliacao(){
+  const aid=document.getElementById('av-atleta').value;
+  if(!aid){alert('Selecione o atleta.');return;}
+  if(!DB.avaliacoes[aid]) DB.avaliacoes[aid]={bip:[],s10:[],s30:[],salto:[],prancha:[],gord:[],peso:[]};
+  const av=DB.avaliacoes[aid];
+  const push=(id,def=0)=>{ const v=parseFloat(document.getElementById(id).value)||def; av[id.replace('av-','')].push(v); };
+  av.bip.push(parseInt(document.getElementById('av-bip').value)||0);
+  av.s10.push(parseFloat(document.getElementById('av-s10').value)||0);
+  av.s30.push(parseFloat(document.getElementById('av-s30').value)||0);
+  av.salto.push(parseInt(document.getElementById('av-salto').value)||0);
+  av.prancha.push(parseInt(document.getElementById('av-prancha').value)||0);
+  av.gord.push(parseFloat(document.getElementById('av-gord').value)||0);
+  av.peso.push(parseFloat(document.getElementById('av-peso').value)||0);
+  saveDB();
+  alert('Avaliação salva com sucesso!');
+}
+
+function buildAvalCharts(){
+  const keys=Object.keys(DB.avaliacoes);
+  function lineChart(id,getter,reverse=false){
+    mkChart(id,{type:'line',data:{labels:SEMANAS.slice(0,4),datasets:keys.map((k,i)=>({
+      label:DB.atletas.find(a=>a.id===k)?.nome.split(' ')[0]||k,
+      data:getter(DB.avaliacoes[k]),borderColor:COLORS[i],backgroundColor:COLORS[i]+'22',
+      tension:.35,pointRadius:4,borderWidth:2.5
+    }))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:11}}}},scales:{y:{reverse}}}});
+  }
+  setTimeout(()=>{
+    lineChart('ch-bip-ev', d=>d.bip);
+    lineChart('ch-s10-ev', d=>d.s10, true);
+    lineChart('ch-s30-ev', d=>d.s30, true);
+    lineChart('ch-salto-ev', d=>d.salto);
+    lineChart('ch-prancha-ev', d=>d.prancha);
+    lineChart('ch-gord-ev', d=>d.gord, true);
+  },50);
+}
+
+// ── WELLBEING ─────────────────────────────────────────────────
+let _wbState={sono:3,fadiga:3,dor:3,motivacao:3,estresse:3};
+const WB_CFG=[
+  {k:'sono',     label:'Qualidade do sono',   icon:'ti-moon',  desc:'1=péssima → 5=excelente'},
+  {k:'fadiga',   label:'Fadiga geral',         icon:'ti-battery-2',desc:'1=muito cansado → 5=descansado'},
+  {k:'dor',      label:'Dor muscular',         icon:'ti-body-scan',  desc:'1=muita dor → 5=sem dor'},
+  {k:'motivacao',label:'Motivação',            icon:'ti-flame',      desc:'1=desmotivado → 5=muito motivado'},
+  {k:'estresse', label:'Ausência de estresse', icon:'ti-brain',      desc:'1=muito estressado → 5=relaxado'},
+];
+
+function renderWellbeing(){
+  const atl=DB.atletas[0];
+  if(atl) _wbState={...(DB.wellbeing[atl.id]||{sono:3,fadiga:3,dor:3,motivacao:3,estresse:3})};
+  return `
+  <div class="g2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-user"></i>Registro de bem-estar</div>
+      <div class="form-group"><label class="form-label">Atleta</label>
+        <select id="wb-sel" onchange="changeWbAtleta(this.value)">${DB.atletas.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label class="form-label">Data</label><input type="date" value="${todayStr()}"></div>
+      <div class="form-group"><label class="form-label">Horas de sono (esta noite)</label><input type="number" step="0.5" id="wb-horas" placeholder="7.5" min="0" max="14"></div>
+      <div style="margin:14px 0 6px;padding:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md)">
+        ${WB_CFG.map(c=>`
+        <div class="wb-row">
+          <div class="wb-label"><i class="ti ${c.icon}"></i>${c.label}</div>
+          <div class="rating-btns" id="rb-${c.k}">
+            ${[1,2,3,4,5].map(v=>`<button class="rating-btn${_wbState[c.k]===v?' active':''}" onclick="setWb('${c.k}',${v},this)">${v}</button>`).join('')}
+          </div>
+          <span style="font-size:11px;color:var(--text-3);margin-left:6px">${_wbState[c.k]}/5</span>
+        </div>`).join('')}
+      </div>
+      <button class="btn primary" style="width:100%;justify-content:center;margin-top:4px" onclick="saveWb()"><i class="ti ti-device-floppy"></i>Salvar e calcular IGP</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-heart-rate-monitor"></i>Índice de prontidão (IGP)</div>
+      <div style="text-align:center;padding:20px 0 16px">
+        <div class="igp-score" id="igp-score" style="color:${igpColor(igp(_wbState))}">${igp(_wbState)}</div>
+        <div style="font-size:13px;color:var(--text-2);margin-top:4px" id="igp-label">${igpLabel(igp(_wbState))}</div>
+        <div style="max-width:220px;margin:12px auto 0">
+          <div class="prog-bar" style="height:8px"><div class="prog-fill" id="igp-bar" style="width:${igp(_wbState)}%;background:${igpColor(igp(_wbState))}"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);margin-top:3px"><span>0</span><span>50</span><span>100</span></div>
+        </div>
+      </div>
+      <div class="alert ${igp(_wbState)>=80?'alert-ok':igp(_wbState)>=60?'alert-warn':'alert-err'} mb16" id="igp-alert">
+        <i class="ti ${igp(_wbState)>=80?'ti-check':igp(_wbState)>=60?'ti-alert-triangle':'ti-x'}"></i>
+        <span id="igp-alert-text">${igp(_wbState)>=80?'Treino normal conforme planejado.':igp(_wbState)>=60?'Monitorar durante a sessão.':'Prontidão crítica — trabalho regenerativo ou dispensa.'}</span>
+      </div>
+      <table>
+        <thead><tr><th>Indicador</th><th>Nota</th><th>Peso no IGP</th></tr></thead>
+        <tbody>
+          ${WB_CFG.map(c=>`<tr><td>${c.label}</td><td id="row-${c.k}"><strong>${_wbState[c.k]}</strong>/5</td><td>20%</td></tr>`).join('')}
+          <tr style="font-weight:600"><td>IGP total</td><td id="row-igp">${igp(_wbState)}/100</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;padding:10px 12px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:12px;color:var(--text-3)">
+        Fórmula: IGP = (soma dos 5 indicadores) ÷ 25 × 100
+      </div>
+    </div>
+  </div>`;
+}
+
+function changeWbAtleta(id){ _wbState={...(DB.wellbeing[id]||{sono:3,fadiga:3,dor:3,motivacao:3,estresse:3})}; updateWbUI(); }
+function setWb(k,v){
+  _wbState[k]=v;
+  const rb=document.getElementById('rb-'+k);
+  rb.querySelectorAll('.rating-btn').forEach((b,i)=>b.classList.toggle('active',i+1===v));
+  document.querySelector(`#rb-${k} + span`).textContent=v+'/5';
+  updateWbUI();
+}
+function updateWbUI(){
+  const v=igp(_wbState);
+  document.getElementById('igp-score').textContent=v;
+  document.getElementById('igp-score').style.color=igpColor(v);
+  document.getElementById('igp-label').textContent=igpLabel(v);
+  document.getElementById('igp-bar').style.width=v+'%';
+  document.getElementById('igp-bar').style.background=igpColor(v);
+  const al=document.getElementById('igp-alert');
+  al.className='alert '+(v>=80?'alert-ok':v>=60?'alert-warn':'alert-err')+' mb16';
+  document.getElementById('igp-alert-text').textContent=v>=80?'Treino normal conforme planejado.':v>=60?'Monitorar durante a sessão. Reduzir carga se piorar.':'Prontidão crítica — trabalho regenerativo ou dispensa justificada.';
+  document.getElementById('row-igp').innerHTML='<strong>'+v+'</strong>/100';
+  WB_CFG.forEach(c=>{ document.getElementById('row-'+c.k).innerHTML='<strong>'+_wbState[c.k]+'</strong>/5'; });
+}
+function saveWb(){
+  const id=document.getElementById('wb-sel').value;
+  DB.wellbeing[id]={..._wbState};
+  saveDB();
+  const btn=event.target.closest('button');
+  btn.innerHTML='<i class="ti ti-check"></i>Salvo!';
+  btn.classList.add('primary');
+  setTimeout(()=>{ btn.innerHTML='<i class="ti ti-device-floppy"></i>Salvar e calcular IGP'; },2000);
+}
+
+// ── CARGA ─────────────────────────────────────────────────────
+function renderCarga(){
+  const sess=DB.cargaSemana;
+  const cargas=sess.map(s=>s.rpe*s.dur);
+  const total=cargas.reduce((a,b)=>a+b,0);
+  const media=Math.round(total/cargas.length);
+  const dp=Math.round(Math.sqrt(cargas.reduce((s,c)=>s+(c-media)**2,0)/cargas.length));
+  const mono=dp>0?(media/dp).toFixed(1):'—';
+  const strain=dp>0?Math.round(total*(media/dp)):0;
+  const monoHigh=parseFloat(mono)>2;
+  const strainClass=strain>6000?'badge-red':strain>3000?'badge-yellow':'badge-green';
+
+  return `
+  <div class="g4 mb16">
+    <div class="metric-card"><div class="metric-label">Carga semanal</div><div class="metric-value">${total} UA</div><div class="metric-sub">meta: 1000–2500 UA</div></div>
+    <div class="metric-card"><div class="metric-label">Média por sessão</div><div class="metric-value">${media} UA</div><div class="metric-sub">${sess.length} sessões</div></div>
+    <div class="metric-card"><div class="metric-label">Monotonia</div><div class="metric-value" style="color:${monoHigh?'var(--red-700)':'var(--green-700)'}">${mono}</div><div class="metric-sub">${monoHigh?'⚠ Variar cargas':'dentro do ideal'}</div></div>
+    <div class="metric-card"><div class="metric-label">Strain (fadiga)</div><div class="metric-value">${strain}</div><div class="metric-sub"><span class="badge ${strainClass}">${strain>6000?'alto':strain>3000?'moderado':'ok'}</span></div></div>
+  </div>
+  ${monoHigh?`<div class="alert alert-warn mb16"><i class="ti ti-alert-triangle"></i>Monotonia alta (${mono} > 2,0) — variar a intensidade das sessões reduz risco de overreaching e lesões por sobrecarga.</div>`:''}
+  ${strain>6000?`<div class="alert alert-err mb16"><i class="ti ti-x"></i>Strain elevado (${strain} > 6000) — considerar redução da carga total na próxima semana.</div>`:''}
+
+  <div class="g2 mb16">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-plus-circle"></i>Registrar nova sessão</div>
+      <div class="g2i">
+        <div class="form-group"><label class="form-label">Data</label><input type="date" id="nc-data" value="${todayStr()}"></div>
+        <div class="form-group"><label class="form-label">Tipo de sessão</label>
+          <select id="nc-tipo"><option>Físico</option><option>Técnico/Tático</option><option>Amistoso</option><option>Jogo-treino</option><option>Regenerativo</option><option>Avaliação</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Duração (min)</label><input type="number" id="nc-dur" placeholder="90" oninput="calcLiveCarga()"></div>
+        <div class="form-group"><label class="form-label">RPE médio (0–10)</label><input type="number" id="nc-rpe" min="0" max="10" step="1" placeholder="6" oninput="calcLiveCarga()"></div>
+      </div>
+      <div class="carga-calc" id="carga-live">Preencha duração e RPE para calcular a carga da sessão.</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--text-3)">
+        Escala RPE: 1=leve &nbsp;3=moderado &nbsp;5=difícil &nbsp;7=muito difícil &nbsp;10=máximo
+      </div>
+      <div class="rpe-bar" style="margin-bottom:10px">
+        ${['#a5d6a7','#c8e6c9','#fff176','#ffcc02','#ffa726','#ff7043','#ef5350','#e53935','#c62828','#b71c1c'].map(c=>`<div style="background:${c}"></div>`).join('')}
+      </div>
+      <button class="btn primary" style="width:100%;justify-content:center" onclick="addSessao()"><i class="ti ti-plus"></i>Adicionar à semana</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i>Cargas desta semana (UA)</div>
+      <div style="position:relative;height:240px"><canvas id="ch-carga-week" role="img" aria-label="Cargas da semana">Cargas da semana.</canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-list-details"></i>Detalhamento da semana</div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Dia</th><th>Tipo</th><th>Duração</th><th>RPE</th><th>Carga (UA)</th><th>% da semana</th></tr></thead>
+      <tbody>
+      ${sess.map((s,i)=>{
+        const ua=cargas[i]; const pct=Math.round(ua/total*100);
+        return `<tr>
+          <td><strong>${s.dia}</strong></td>
+          <td>${s.tipo}</td>
+          <td>${s.dur} min</td>
+          <td><span class="badge ${s.rpe>=8?'badge-red':s.rpe>=6?'badge-yellow':'badge-green'}">${s.rpe}/10</span></td>
+          <td><strong>${ua}</strong></td>
+          <td style="width:180px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="min-width:34px;font-size:12px">${pct}%</span>
+              <div class="prog-bar" style="flex:1;height:6px"><div class="prog-fill" style="width:${pct}%"></div></div>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+      <tfoot><tr><td colspan="4">Total semanal</td><td>${total} UA</td><td>100%</td></tr></tfoot>
+    </table>
+    </div>
+  </div>`;
+}
+
+function calcLiveCarga(){
+  const dur=parseFloat(document.getElementById('nc-dur').value)||0;
+  const rpe=parseFloat(document.getElementById('nc-rpe').value)||0;
+  const el=document.getElementById('carga-live');
+  if(!dur||!rpe){ el.textContent='Preencha duração e RPE.'; el.style.fontWeight=''; return; }
+  const ua=Math.round(dur*rpe);
+  el.innerHTML=`Carga da sessão: <strong>${ua} UA</strong> (RPE ${rpe} × ${dur} min) &nbsp;—&nbsp; <span style="color:${ua>600?'var(--red-700)':ua>350?'var(--yellow-700)':'var(--green-700)'}">${ua>600?'Alta intensidade':ua>350?'Intensidade moderada':'Intensidade baixa'}</span>`;
+}
+
+function addSessao(){
+  const dur=parseFloat(document.getElementById('nc-dur').value);
+  const rpe=parseFloat(document.getElementById('nc-rpe').value);
+  const tipo=document.getElementById('nc-tipo').value;
+  const dia=document.getElementById('nc-data').value;
+  if(!dur||!rpe){ alert('Informe duração e RPE.'); return; }
+  const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const d=new Date(dia+'T12:00:00');
+  DB.cargaSemana.push({dia:dias[d.getDay()],tipo,dur,rpe});
+  saveDB();
+  destroyCharts();
+  document.getElementById('content').innerHTML = renderCarga();
+  afterRender('carga');
+}
+
+// ── PRESENÇA ──────────────────────────────────────────────────
+function renderPresenca(){
+  const datas=DB.treinoDatas;
+  return `
+  <div class="alert alert-info mb16"><i class="ti ti-info-circle"></i><strong>P</strong> = Presente &nbsp;|&nbsp; <strong>F</strong> = Falta &nbsp;|&nbsp; <strong>J</strong> = Justificado &nbsp;|&nbsp; <strong>L</strong> = Lesionado</div>
+  <div class="card">
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:160px">Atleta</th>
+          ${datas.map(d=>`<th class="pres-cell">${d}</th>`).join('')}
+          <th style="min-width:90px">% Presença</th>
+        </tr>
+      </thead>
+      <tbody>
+      ${DB.atletas.map(a=>{
+        const arr=DB.presenca[a.id]||[];
+        const pct=presPct(arr);
+        return `<tr>
+          <td><div style="display:flex;align-items:center;gap:9px"><div class="avatar">${initials(a.nome)}</div><div><div style="font-weight:500">${a.nome}</div><div style="font-size:11px;color:var(--text-3)">${a.pos}</div></div></div></td>
+          ${datas.map((_,i)=>{
+            const val=arr[i];
+            const isLes=a.status==='Lesionado';
+            const cls=val===1?'badge-green':(isLes&&val!==1)?'badge-red':'badge-yellow';
+            const lbl=val===1?'P':(isLes&&val!==1)?'L':'F';
+            return `<td class="pres-cell"><span class="badge ${cls}">${lbl}</span></td>`;
+          }).join('')}
+          <td>
+            <div style="font-weight:600;font-size:13px">${pct}%</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${pct>=80?'var(--green-700)':pct>=60?'var(--yellow-700)':'var(--red-700)'}"></div></div>
+          </td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+// ── LESÕES ────────────────────────────────────────────────────
+function renderLesoes(){
+  const ativas=DB.lesoes.filter(l=>l.status==='Em tratamento').length;
+  return `
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn primary" onclick="openLesaoModal()"><i class="ti ti-plus"></i>Registrar lesão</button>
+  </div>
+  <div class="g2 mb16" style="max-width:400px">
+    <div class="metric-card"><div class="metric-label">Lesões ativas</div><div class="metric-value metric-down">${ativas}</div><div class="metric-sub">atletas afastados</div></div>
+    <div class="metric-card"><div class="metric-label">Total na temporada</div><div class="metric-value">${DB.lesoes.length}</div><div class="metric-sub">${DB.lesoes.filter(l=>l.status==='Recuperado').length} recuperado(s)</div></div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Atleta</th><th>Início</th><th>Retorno</th><th>Dias</th><th>Região</th><th>Tipo</th><th>Mecanismo</th><th>Status</th></tr></thead>
+      <tbody>
+      ${DB.lesoes.map(l=>{
+        let dias='—';
+        if(l.inicio&&l.retorno&&l.retorno!=='—'){ try{dias=Math.round((new Date(l.retorno)-new Date(l.inicio))/(1000*60*60*24))+'d';}catch(e){} }
+        else if(l.inicio&&l.status==='Em tratamento'){ try{dias=Math.round((new Date()-new Date(l.inicio))/(1000*60*60*24))+'d +';}catch(e){} }
+        return `<tr>
+          <td><strong>${l.atleta}</strong></td>
+          <td>${fmtDate(l.inicio)}</td>
+          <td>${l.retorno==='—'?'—':fmtDate(l.retorno)}</td>
+          <td>${dias}</td>
+          <td>${l.regiao}</td>
+          <td><span class="badge badge-gray">${l.tipo}</span></td>
+          <td>${l.mec}</td>
+          <td><span class="badge ${l.status==='Recuperado'?'badge-green':'badge-red'}">${l.status}</span></td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function openLesaoModal(){
+  const sel=document.getElementById('l-atleta');
+  sel.innerHTML='';
+  buildAtletaOptions(sel);
+  document.getElementById('l-inicio').value=todayStr();
+  document.getElementById('modal-lesao').classList.remove('hidden');
+}
+function saveLesao(){
+  const aid=document.getElementById('l-atleta').value;
+  const a=DB.atletas.find(x=>x.id===aid);
+  if(!a){alert('Selecione o atleta.');return;}
+  const retorno=document.getElementById('l-retorno').value;
+  DB.lesoes.push({
+    atleta:a.nome,
+    inicio:document.getElementById('l-inicio').value,
+    retorno:retorno||'—',
+    regiao:document.getElementById('l-regiao').value+' ('+document.getElementById('l-lado').value+')',
+    tipo:document.getElementById('l-tipo').value,
+    mec:document.getElementById('l-mec').value,
+    obs:document.getElementById('l-obs').value,
+    status:retorno?'Recuperado':'Em tratamento',
+  });
+  if(!retorno){ const at=DB.atletas.find(x=>x.id===aid); if(at) at.status='Lesionado'; }
+  saveDB();
+  document.getElementById('modal-lesao').classList.add('hidden');
+  destroyCharts();
+  document.getElementById('content').innerHTML=renderLesoes();
+}
+
+// ── RELATÓRIO ─────────────────────────────────────────────────
+function renderRelatorio(){
+  return `
+  <div class="g2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-settings"></i>Configurar relatório</div>
+      <div class="form-group"><label class="form-label">Atleta</label>
+        <select id="rel-atleta">${DB.atletas.map(a=>`<option value="${a.id}">${a.nome} (${a.pos})</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label class="form-label">Período</label>
+        <select id="rel-periodo"><option>Semana 4</option><option>Semana 8</option><option>Semana 12</option><option>Semana 16</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Pontos fortes (para o relatório)</label><textarea id="rel-fortes" placeholder="Evolução positiva em todos os testes. Assiduidade acima da média..."></textarea></div>
+      <div class="form-group"><label class="form-label">Pontos de melhoria</label><textarea id="rel-melhoria" placeholder="Qualidade do sono abaixo do ideal. Trabalhar resistência de core..."></textarea></div>
+      <div class="form-group"><label class="form-label">Recomendações do preparador</label><textarea id="rel-rec" placeholder="Incluir trabalho de fortalecimento de tornozelo. Orientar sobre higiene do sono..."></textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn primary" style="flex:1;justify-content:center" onclick="gerarRelatorio()"><i class="ti ti-report"></i>Gerar relatório</button>
+        <button class="btn" onclick="imprimirRelatorio()"><i class="ti ti-printer"></i>Imprimir</button>
+      </div>
+    </div>
+    <div id="rel-output" style="flex:1">
+      <div style="padding:40px 20px;text-align:center;color:var(--text-3)"><i class="ti ti-file-analytics" style="font-size:48px;display:block;margin-bottom:8px"></i>Preencha os dados e clique em "Gerar relatório"</div>
+    </div>
+  </div>`;
+}
+
+function gerarRelatorio(){
+  const id=document.getElementById('rel-atleta').value;
+  const a=DB.atletas.find(x=>x.id===id);
+  if(!a) return;
+  const av=DB.avaliacoes[id];
+  const w=DB.wellbeing[id];
+  const pp=presPct(DB.presenca[id]||[]);
+  const v=igp(w);
+  const periodo=document.getElementById('rel-periodo').value;
+  const fortes=document.getElementById('rel-fortes').value||'—';
+  const melhoria=document.getElementById('rel-melhoria').value||'—';
+  const rec=document.getElementById('rel-rec').value||'—';
+
+  document.getElementById('rel-output').innerHTML=`
+  <div class="card" id="rel-print" style="border:2px solid var(--green-700)">
+    <div class="report-header">
+      <h2>Relatório de desempenho individual</h2>
+      <p>Período: ${periodo} &nbsp;|&nbsp; Gerado em: ${new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})}</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div class="avatar avatar-lg">${initials(a.nome)}</div>
+      <div>
+        <div style="font-size:18px;font-weight:600">${a.nome}</div>
+        <div style="font-size:12px;color:var(--text-2)">${a.pos} · ${idade(a.nasc)} anos · Pé ${a.pe} · ${a.id}</div>
+      </div>
+      <span class="badge ${statusClass(a.status)}" style="margin-left:auto">${a.status}</span>
+    </div>
+    <div class="g4 mb16">
+      <div class="metric-card"><div class="metric-label">Peso atual</div><div class="metric-value">${a.peso}</div><div class="metric-sub">kg</div></div>
+      <div class="metric-card"><div class="metric-label">% Gordura</div><div class="metric-value">${a.gord}</div><div class="metric-sub">%</div></div>
+      <div class="metric-card"><div class="metric-label">Presença</div><div class="metric-value">${pp}</div><div class="metric-sub">%</div></div>
+      <div class="metric-card"><div class="metric-label">IGP atual</div><div class="metric-value" style="color:${igpColor(v)}">${v}</div><div class="metric-sub">/100</div></div>
+    </div>
+    ${av ? `
+    <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Evolução dos testes</div>
+    <div class="table-wrap mb16">
+    <table>
+      <thead><tr><th>Teste</th><th>Avaliação inicial</th><th>Atual</th><th>Variação</th><th>Tendência</th></tr></thead>
+      <tbody>
+        ${[
+          ['BIP/Yo-Yo','bip','m',false],['Sprint 10m','s10','s',true],['Sprint 30m','s30','s',true],['Salto horizontal','salto','cm',false],['Prancha isométrica','prancha','s',false]
+        ].map(([nome,key,unit,menor])=>{
+          if(!av[key]||!av[key].length) return '';
+          const ini=av[key][0]; const cur=av[key][av[key].length-1];
+          const delta=menor?(ini-cur):(cur-ini);
+          const melhorou=delta>0;
+          return `<tr>
+            <td>${nome}</td><td>${ini} ${unit}</td><td><strong>${cur} ${unit}</strong></td>
+            <td style="color:${melhorou?'var(--green-700)':'var(--red-700)'}">
+              ${melhorou?'+':''}${menor?((ini-cur).toFixed(2)):((cur-ini))} ${unit}
+            </td>
+            <td>${melhorou?'<span class="badge badge-green">Melhora</span>':'<span class="badge badge-red">Queda</span>'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>` : '<div class="alert alert-info mb16"><i class="ti ti-info-circle"></i>Sem dados de evolução para este atleta. Realize a avaliação física primeiro.</div>'}
+    <div class="g2 mb16">
+      <div style="padding:14px;background:var(--green-50);border-radius:var(--radius-md);border-left:3px solid var(--green-700)">
+        <div style="font-size:12px;font-weight:600;color:var(--green-700);margin-bottom:6px"><i class="ti ti-thumb-up" style="font-size:14px;vertical-align:-2px"></i> Pontos fortes</div>
+        <div style="font-size:13px;color:var(--green-800);line-height:1.6">${fortes}</div>
+      </div>
+      <div style="padding:14px;background:var(--yellow-50);border-radius:var(--radius-md);border-left:3px solid var(--yellow-700)">
+        <div style="font-size:12px;font-weight:600;color:var(--yellow-700);margin-bottom:6px"><i class="ti ti-target" style="font-size:14px;vertical-align:-2px"></i> Pontos de melhoria</div>
+        <div style="font-size:13px;color:#5d3f00;line-height:1.6">${melhoria}</div>
+      </div>
+    </div>
+    <div style="padding:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md)">
+      <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px"><i class="ti ti-notes" style="font-size:14px;vertical-align:-2px"></i> Recomendações do preparador físico</div>
+      <div style="font-size:13px;color:var(--text-1);line-height:1.6">${rec}</div>
+    </div>
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px;color:var(--text-3)">
+      <span>FutPerformance · Sistema de Monitoramento Esportivo</span>
+      <span>Ref.: A. C. Gomes · J. P. Medina · J. A. Rodrigues · Foster RPE</span>
+    </div>
+  </div>`;
+}
+
+function imprimirRelatorio(){
+  const out=document.getElementById('rel-print');
+  if(!out){ alert('Gere o relatório primeiro.'); return; }
+  window.print();
+}
+
+// ── AFTER RENDER ──────────────────────────────────────────────
+function afterRender(pg){
+  if(pg==='dashboard'){
+    const cargas=DB.cargaSemana.map(s=>s.rpe*s.dur);
+    setTimeout(()=>{
+      mkChart('ch-carga-dash',{type:'bar',data:{
+        labels:DB.cargaSemana.map(s=>s.dia),
+        datasets:[{label:'UA',data:cargas,backgroundColor:['#2e7d32','#1565c0','#6a1b9a','#e65100'],borderRadius:5,}]
+      },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}}}}});
+
+      const bipKeys=Object.keys(DB.avaliacoes);
+      mkChart('ch-bip-dash',{type:'line',data:{
+        labels:SEMANAS,
+        datasets:bipKeys.map((k,i)=>({
+          label:DB.atletas.find(a=>a.id===k)?.nome.split(' ')[0]||k,
+          data:DB.avaliacoes[k].bip,borderColor:COLORS[i],backgroundColor:COLORS[i]+'18',
+          tension:.35,pointRadius:4,borderWidth:2.5,fill:true,
+        }))
+      },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:11},usePointStyle:true}}},scales:{y:{grid:{color:'rgba(0,0,0,.05)'}}}}});
+    },50);
+  }
+  if(pg==='carga'){
+    const cargas=DB.cargaSemana.map(s=>s.rpe*s.dur);
+    setTimeout(()=>{
+      mkChart('ch-carga-week',{type:'bar',data:{
+        labels:DB.cargaSemana.map(s=>s.dia),
+        datasets:[{label:'Carga (UA)',data:cargas,backgroundColor:cargas.map(c=>c>600?'#e53935':c>350?'#ffa726':'#43a047'),borderRadius:5}]
+      },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}}}}});
+    },50);
+  }
+}
+
+// ── INITIAL LOAD ──────────────────────────────────────────────
+(function init(){
+  document.getElementById('content').innerHTML = renderDashboard();
+  afterRender('dashboard');
+})();
+</script>
+</body>
+</html>
