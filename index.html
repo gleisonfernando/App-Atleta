@@ -33,18 +33,14 @@ body{min-height:100vh;background:#f0f4f0}
 .user-name{color:#fff;font-size:15px;font-weight:600}
 .user-pos{color:rgba(255,255,255,.65);font-size:12px}
 .logout-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit}
-/* Tabs */
 .tabs{display:flex;background:var(--g9);border-top:1px solid rgba(255,255,255,.1);flex-shrink:0}
-.tab-btn{flex:1;padding:11px 4px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;border-bottom:2px solid transparent}
-.tab-btn .ico{font-size:18px}
+.tab-btn{flex:1;padding:11px 4px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:10.5px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;border-bottom:2px solid transparent}
+.tab-btn .ico{font-size:17px}
 .tab-btn.active{color:#fff;border-bottom-color:var(--g6)}
-/* Content */
 .content{flex:1;overflow-y:auto;padding:16px}
-/* Cards */
 .card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .card-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .card-title .ico{font-size:16px}
-/* Login */
 .login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;min-height:60vh}
 .login-icon{font-size:56px;margin-bottom:16px}
 .login-title{font-size:20px;font-weight:700;margin-bottom:4px}
@@ -59,13 +55,11 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-sm{padding:7px 16px;border-radius:8px;border:1.5px solid var(--bds);background:var(--sur);color:var(--t1);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
 .error{background:var(--r5);border:1px solid #ef9a9a;color:var(--r7);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;width:100%}
-/* Badges */
 .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
 .bg{background:var(--g5);color:#1b5e20}
 .by{background:var(--y5);color:var(--y7)}
 .br{background:var(--r5);color:var(--r7)}
 .bb{background:var(--b5);color:var(--b7)}
-/* Wellbeing form */
 .wb-block{margin-bottom:14px}
 .wb-q{font-size:13px;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .wb-desc{font-size:11px;color:var(--t3);margin-bottom:7px}
@@ -73,24 +67,20 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 .rb{flex:1;padding:10px 0;border:1.5px solid var(--bds);border-radius:8px;background:var(--sur);cursor:pointer;font-size:16px;font-weight:600;color:var(--t2);transition:all .12s;font-family:inherit;text-align:center}
 .rb:hover{border-color:var(--g6);color:var(--g7)}
 .rb.active{background:var(--g7);color:#fff;border-color:var(--g7)}
-/* IGP display */
 .igp-big{font-size:64px;font-weight:700;line-height:1;text-align:center;margin:12px 0 4px}
 .prog-bar{height:6px;background:var(--bdr);border-radius:3px;overflow:hidden;margin:4px 0}
 .prog-fill{height:100%;border-radius:3px;transition:width .5s ease}
-/* Alert */
 .alert{padding:10px 14px;border-radius:8px;font-size:13px;display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
 .alert-ok{background:var(--g5);color:#1b5e20;border:1px solid var(--g1)}
 .alert-warn{background:var(--y5);color:#5d3f00;border:1px solid #ffe082}
 .alert-err{background:var(--r5);color:var(--r7);border:1px solid #ef9a9a}
 .alert-info{background:var(--b5);color:var(--b7);border:1px solid #90caf9}
-/* Tests info */
 .test-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
 .test-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .test-num{width:28px;height:28px;border-radius:50%;background:var(--g7);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .test-name{font-size:14px;font-weight:600;color:var(--t1)}
 .test-sub{font-size:11px;color:var(--t3);margin-top:1px}
 .test-body{font-size:12.5px;color:var(--t2);line-height:1.6}
-/* Results */
 .result-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bdr)}
 .result-row:last-child{border-bottom:none}
 .result-label{font-size:13px;color:var(--t2)}
@@ -100,23 +90,20 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 .metric-mini-lbl{font-size:10px;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-/* Spinner */
 .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* Success */
 .success-screen{text-align:center;padding:32px 20px}
 .success-icon{font-size:56px;margin-bottom:12px}
 .success-title{font-size:20px;font-weight:700;color:var(--g7);margin-bottom:6px}
 .success-sub{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:20px}
-/* Footer */
 .footer{text-align:center;font-size:11px;color:var(--t3);padding:10px 16px 20px;flex-shrink:0}
 .hidden{display:none!important}
+.presence-btn{flex:1;padding:14px;border-radius:10px;border:2px solid var(--bds);background:var(--sur);color:var(--t1);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- HEADER (visible after login) -->
   <div class="header hidden" id="main-header">
     <div class="header-top">
       <div class="brand"><span class="brand-icon">⚽</span><span class="brand-name">SKBrederis 1B</span></div>
@@ -135,10 +122,12 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs hidden" id="main-tabs">
     <button class="tab-btn active" id="tab-wb" onclick="switchTab('wb')">
       <span class="ico">❤️</span><span id="tabl-wb">Bem-estar</span>
+    </button>
+    <button class="tab-btn" id="tab-rpe" onclick="switchTab('rpe')">
+      <span class="ico">⚡</span><span id="tabl-rpe">RPE</span>
     </button>
     <button class="tab-btn" id="tab-results" onclick="switchTab('results')">
       <span class="ico">📊</span><span id="tabl-results">Resultados</span>
@@ -148,10 +137,8 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
     </button>
   </div>
 
-  <!-- CONTENT -->
   <div class="content" id="content">
 
-    <!-- LOGIN SCREEN -->
     <div id="screen-login" class="login-wrap">
       <div class="login-icon">⚽</div>
       <div class="login-title">SKBrederis 1B</div>
@@ -168,7 +155,6 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
       <button class="btn" onclick="doLogin()" id="btn-login"><span id="btn-login-txt">Entrar</span></button>
     </div>
 
-    <!-- WELLBEING SCREEN -->
     <div id="screen-wb" class="hidden">
       <div id="wb-form-area"></div>
       <div id="wb-success-area" class="hidden success-screen">
@@ -181,10 +167,8 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
       </div>
     </div>
 
-    <!-- RESULTS SCREEN -->
+    <div id="screen-rpe" class="hidden"></div>
     <div id="screen-results" class="hidden"></div>
-
-    <!-- TESTS INFO SCREEN -->
     <div id="screen-tests" class="hidden"></div>
 
   </div>
@@ -192,7 +176,7 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 </div>
 
 <script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuXq0VyABBY9gLa7RX6EgRFTCsyQpYooL3dnkOMM6mVQgSUXnP5kzmL2E9UZ5WCBTkIg/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkBiuL2o8n8fEkvQT__ivPM_2dOOSqER8FsPGWJMqoqSS6A0skBaJbyzUDs3llLN5hVQ/exec";
 
 // ═══ i18n ════════════════════════════════════════════════════════
 var TR = {
@@ -201,10 +185,9 @@ pt:{
   lbl_user:"Jogador", opt_sel:"— selecionar —", lbl_pin:"PIN (4 dígitos)",
   btn_login:"Entrar", err_sel:"Selecione o seu nome.", err_pin:"PIN incorreto.",
   err_conn:"Erro de ligação.",
-  tab_wb:"Bem-estar", tab_results:"Resultados", tab_tests:"Testes",
+  tab_wb:"Bem-estar", tab_results:"Resultados", tab_tests:"Testes", rpe_tab:"RPE",
   btn_logout:"Sair", season:"Temporada 2026/2027",
   wb_title:"Bem-estar de hoje",
-  date_lbl:"Data de hoje",
   sleep_lbl:"🌙 Horas de sono",
   q_sleep:{label:"Qualidade do sono",ico:"🌙",desc:"1 = péssima → 5 = excelente"},
   q_fatigue:{label:"Fadiga geral",ico:"🔋",desc:"1 = muito cansado → 5 = descansado"},
@@ -214,62 +197,62 @@ pt:{
   btn_send:"Enviar", btn_sending:"A enviar...", saved:"Guardado!",
   igp_full:"Prontidão total", igp_mod:"Prontidão moderada",
   igp_red:"Prontidão reduzida", igp_crit:"Prontidão crítica",
-  igp_act_full:"Treino normal conforme planejado.",
-  igp_act_mod:"Monitorar durante a sessão. Reduzir carga se piorar.",
-  igp_act_crit:"Prontidão crítica — trabalho regenerativo ou dispensa.",
   igp_lbl:"Índice de prontidão (IGP)",
   suc_title:"Enviado!", suc_sub:"Os seus dados foram registados com sucesso.",
   btn_new_entry:"Novo registo",
   results_title:"Os meus resultados",
   no_results:"Ainda não há resultados disponíveis. Os dados aparecerão aqui após a avaliação física.",
-  loading:"A carregar...",
   comp_title:"Composição corporal",
-  peso_lbl:"Peso", gord_navy:"% Gordura (Marinha)", gord_jp:"% Gordura (J&P)",
-  magra_lbl:"Massa magra", gorda_lbl:"Massa gorda",
+  peso_lbl:"Peso", gord_navy:"% Gordura (Marinha)",
+  magra_lbl:"Massa magra",
   asym_title:"Assimetria bilateral",
   coxa_lbl:"Coxa", pant_lbl:"Panturrilha",
-  left:"Esquerdo", right:"Direito", diff:"Diferença",
   asym_ok:"Simetria adequada", asym_warn:"Atenção: assimetria moderada", asym_alert:"Assimetria significativa",
   tests_title:"Testes físicos", period_lbl:"Período",
   prancha:"Prancha isométrica", s10:"Sprint 10m", s30:"Sprint 30m",
   salto:"Salto horizontal", bip:"BIP / Yo-Yo",
-  clf_exc:"Excelente", clf_bom:"Bom", clf_reg:"Regular", clf_fra:"Fraco",
+  clf_exc:"Excelente", clf_bom:"Bom", clf_reg:"Regular",
   evolution_title:"Evolução dos testes",
   tests_info_title:"Sobre os testes",
-  test1_name:"Composição Corporal",
-  test1_sub:"Marinha Americana + Jackson & Pollock",
+  test1_name:"Composição Corporal", test1_sub:"Marinha Americana + Jackson & Pollock",
   test1_body:"Medimos o seu peso, pescoço, cintura e quadril para estimar a sua percentagem de gordura corporal e massa magra. Para o futebol, o ideal é manter entre 8-14% de gordura. Quanto menos gordura excedente, melhor a sua potência relativa e velocidade.",
-  test2_name:"Assimetria Bilateral",
-  test2_sub:"Coxa e panturrilha — comparação entre lados",
+  test2_name:"Assimetria Bilateral", test2_sub:"Coxa e panturrilha — comparação entre lados",
   test2_body:"Medimos o perímetro da coxa e panturrilha dos dois lados. Uma diferença acima de 1 cm pode aumentar o risco de lesões musculares. Identificar essa diferença permite trabalhar o lado mais fraco para prevenir lesões.",
-  test3_name:"Prancha Isométrica",
-  test3_sub:"Resistência e estabilidade do core",
+  test3_name:"Prancha Isométrica", test3_sub:"Resistência e estabilidade do core",
   test3_body:"Avalia quanto tempo consegue manter a posição de prancha. Um core forte e resistente melhora o chute, a estabilidade nos duelos e protege a coluna. Acima de 90 segundos é considerado bom para um jogador de futebol.",
-  test4_name:"Teste de Illinois",
-  test4_sub:"Agilidade e mudança de direção",
+  test4_name:"Teste de Illinois", test4_sub:"Agilidade e mudança de direção",
   test4_body:"Um percurso de cones que avalia a sua capacidade de mudar de direção rapidamente. No futebol ocorrem mais de 700 mudanças de direção por jogo. Quanto menor o tempo, melhor a sua agilidade.",
-  test5_name:"Sprint 10 metros",
-  test5_sub:"Aceleração inicial",
+  test5_name:"Sprint 10 metros", test5_sub:"Aceleração inicial",
   test5_body:"Avalia a sua capacidade de acelerar nos primeiros metros. A maioria das ações decisivas no futebol ocorre em distâncias curtas (5-15m). Abaixo de 1,80s é considerado excelente para jogadores de futebol.",
-  test6_name:"Sprint 30 metros",
-  test6_sub:"Velocidade máxima",
+  test6_name:"Sprint 30 metros", test6_sub:"Velocidade máxima",
   test6_body:"Avalia a sua velocidade máxima. Complementa o sprint de 10m — enquanto o 10m mede aceleração, o 30m avalia a velocidade máxima que consegue atingir. Fundamental para contraataques e transições rápidas.",
-  test7_name:"Salto Horizontal",
-  test7_sub:"Potência explosiva dos membros inferiores",
+  test7_name:"Salto Horizontal", test7_sub:"Potência explosiva dos membros inferiores",
   test7_body:"Salta o mais longe possível a partir da posição estática. Mede a potência explosiva das pernas — essencial para chutes, cabecadas e aceleração. Acima de 200 cm é considerado bom para futebol.",
-  test8_name:"BIP / Yo-Yo",
-  test8_sub:"Resistência aeróbia específica para futebol",
+  test8_name:"BIP / Yo-Yo", test8_sub:"Resistência aeróbia específica para futebol",
   test8_body:"Corridas de 20 metros com velocidade progressiva. Avalia a sua capacidade de repetir sprints ao longo dos 90 minutos — exatamente o que o futebol exige. Acima de 1400 metros é considerado bom para futebol amador competitivo.",
+  presence_title:"Vais treinar hoje?",
+  presence_yes:"Sim, vou", presence_no:"Não vou",
+  presence_err:"Confirme se vais treinar hoje.",
+  rpe_title:"Como foi o treino de hoje?",
+  rpe_sub:"Avalia o esforço geral que sentiste na sessão.",
+  rpe_hint_0:"Repouso",
+  rpe_hint_1:"Muito leve",
+  rpe_hint_3:"Leve / moderado",
+  rpe_hint_5:"Difícil",
+  rpe_hint_7:"Muito difícil",
+  rpe_hint_9:"Máximo",
+  rpe_btn:"Enviar RPE", rpe_sending:"A enviar...",
+  rpe_saved:"RPE registado! Obrigado.",
+  rpe_err_select:"Selecione o seu nível de esforço."
 },
 de:{
   login_sub:"Wohlbefinden und Ergebnisse",
   lbl_user:"Spieler", opt_sel:"— auswählen —", lbl_pin:"PIN (4 Ziffern)",
   btn_login:"Anmelden", err_sel:"Bitte Namen auswählen.", err_pin:"Falscher PIN.",
   err_conn:"Verbindungsfehler.",
-  tab_wb:"Wohlbefinden", tab_results:"Ergebnisse", tab_tests:"Tests",
+  tab_wb:"Wohlbefinden", tab_results:"Ergebnisse", tab_tests:"Tests", rpe_tab:"RPE",
   btn_logout:"Abmelden", season:"Saison 2026/2027",
   wb_title:"Heutiges Wohlbefinden",
-  date_lbl:"Heutiges Datum",
   sleep_lbl:"🌙 Schlafstunden",
   q_sleep:{label:"Schlafqualität",ico:"🌙",desc:"1 = schlecht → 5 = ausgezeichnet"},
   q_fatigue:{label:"Allgemeine Müdigkeit",ico:"🔋",desc:"1 = sehr müde → 5 = ausgeruht"},
@@ -279,52 +262,53 @@ de:{
   btn_send:"Senden", btn_sending:"Wird gesendet...", saved:"Gespeichert!",
   igp_full:"Volle Einsatzbereitschaft", igp_mod:"Moderate Bereitschaft",
   igp_red:"Reduzierte Bereitschaft", igp_crit:"Kritische Bereitschaft",
-  igp_act_full:"Normales Training wie geplant.",
-  igp_act_mod:"Während der Einheit überwachen.",
-  igp_act_crit:"Kritische Bereitschaft — regeneratives Training.",
   igp_lbl:"Einsatzbereitschaftsindex (WBI)",
   suc_title:"Gesendet!", suc_sub:"Ihre Daten wurden erfolgreich gespeichert.",
   btn_new_entry:"Neue Erfassung",
   results_title:"Meine Ergebnisse",
   no_results:"Noch keine Ergebnisse verfügbar. Die Daten erscheinen nach der körperlichen Bewertung.",
-  loading:"Wird geladen...",
   comp_title:"Körperzusammensetzung",
-  peso_lbl:"Gewicht", gord_navy:"% Körperfett (Marine)", gord_jp:"% Körperfett (J&P)",
-  magra_lbl:"Magermasse", gorda_lbl:"Fettmasse",
+  peso_lbl:"Gewicht", gord_navy:"% Körperfett (Marine)",
+  magra_lbl:"Magermasse",
   asym_title:"Bilaterale Asymmetrie",
   coxa_lbl:"Oberschenkel", pant_lbl:"Wade",
-  left:"Links", right:"Rechts", diff:"Differenz",
   asym_ok:"Symmetrie ausreichend", asym_warn:"Achtung: moderate Asymmetrie", asym_alert:"Erhebliche Asymmetrie",
   tests_title:"Körperliche Tests", period_lbl:"Zeitraum",
   prancha:"Isometrische Planke", s10:"Sprint 10m", s30:"Sprint 30m",
   salto:"Standweitsprung", bip:"BIP / Yo-Yo",
-  clf_exc:"Ausgezeichnet", clf_bom:"Gut", clf_reg:"Ausreichend", clf_fra:"Schwach",
+  clf_exc:"Ausgezeichnet", clf_bom:"Gut", clf_reg:"Ausreichend",
   evolution_title:"Testentwicklung",
   tests_info_title:"Über die Tests",
-  test1_name:"Körperzusammensetzung",
-  test1_sub:"US Marine + Jackson & Pollock",
+  test1_name:"Körperzusammensetzung", test1_sub:"US Marine + Jackson & Pollock",
   test1_body:"Wir messen Gewicht, Hals, Taille und Hüfte, um den Körperfettanteil und die Magermasse zu schätzen. Für Fußball ist 8-14% Körperfett ideal. Weniger überschüssiges Fett bedeutet mehr relative Leistung und Geschwindigkeit.",
-  test2_name:"Bilaterale Asymmetrie",
-  test2_sub:"Oberschenkel und Wade — Seitenvergleich",
+  test2_name:"Bilaterale Asymmetrie", test2_sub:"Oberschenkel und Wade — Seitenvergleich",
   test2_body:"Wir messen den Umfang von Oberschenkel und Wade auf beiden Seiten. Ein Unterschied über 1 cm kann das Verletzungsrisiko erhöhen. Die Identifikation ermöglicht gezielte Arbeit an der schwächeren Seite.",
-  test3_name:"Isometrische Planke",
-  test3_sub:"Core-Ausdauer und Stabilität",
+  test3_name:"Isometrische Planke", test3_sub:"Core-Ausdauer und Stabilität",
   test3_body:"Wie lange können Sie die Plank-Position halten? Ein starker Core verbessert den Schuss, die Stabilität in Zweikämpfen und schützt die Wirbelsäule. Über 90 Sekunden gilt als gut für Fußballspieler.",
-  test4_name:"Illinois-Test",
-  test4_sub:"Agilität und Richtungswechsel",
+  test4_name:"Illinois-Test", test4_sub:"Agilität und Richtungswechsel",
   test4_body:"Ein Hindernisparcours, der die Fähigkeit zum schnellen Richtungswechsel bewertet. Im Fußball gibt es über 700 Richtungswechsel pro Spiel. Je kürzer die Zeit, desto besser die Agilität.",
-  test5_name:"Sprint 10 Meter",
-  test5_sub:"Startbeschleunigung",
+  test5_name:"Sprint 10 Meter", test5_sub:"Startbeschleunigung",
   test5_body:"Bewertet die Beschleunigung in den ersten Metern. Die meisten entscheidenden Aktionen im Fußball finden auf kurzen Distanzen statt (5-15m). Unter 1,80s gilt als ausgezeichnet.",
-  test6_name:"Sprint 30 Meter",
-  test6_sub:"Höchstgeschwindigkeit",
+  test6_name:"Sprint 30 Meter", test6_sub:"Höchstgeschwindigkeit",
   test6_body:"Bewertet die Höchstgeschwindigkeit. Ergänzt den 10m-Sprint — während 10m die Beschleunigung misst, bewertet 30m die erreichbare Höchstgeschwindigkeit. Entscheidend für Konter und schnelle Umschaltaktionen.",
-  test7_name:"Standweitsprung",
-  test7_sub:"Explosive Kraft der Beine",
+  test7_name:"Standweitsprung", test7_sub:"Explosive Kraft der Beine",
   test7_body:"So weit wie möglich springen aus dem Stand. Misst die explosive Kraft der Beine — wichtig für Schüsse, Kopfbälle und Beschleunigung. Über 200 cm gilt als gut für Fußball.",
-  test8_name:"BIP / Yo-Yo",
-  test8_sub:"Fußballspezifische Ausdauer",
+  test8_name:"BIP / Yo-Yo", test8_sub:"Fußballspezifische Ausdauer",
   test8_body:"20-Meter-Läufe mit progressiver Geschwindigkeit. Bewertet die Fähigkeit, Sprints über 90 Minuten zu wiederholen — genau das, was Fußball erfordert. Über 1400 Meter gilt als gut für kompetitiven Amateurfußball.",
+  presence_title:"Trainierst du heute?",
+  presence_yes:"Ja, ich komme", presence_no:"Nein, ich komme nicht",
+  presence_err:"Bitte bestätige, ob du heute trainierst.",
+  rpe_title:"Wie war das heutige Training?",
+  rpe_sub:"Bewerte die allgemeine Anstrengung, die du in der Einheit gespürt hast.",
+  rpe_hint_0:"Ruhe",
+  rpe_hint_1:"Sehr leicht",
+  rpe_hint_3:"Leicht / moderat",
+  rpe_hint_5:"Schwer",
+  rpe_hint_7:"Sehr schwer",
+  rpe_hint_9:"Maximum",
+  rpe_btn:"RPE senden", rpe_sending:"Wird gesendet...",
+  rpe_saved:"RPE gespeichert! Danke.",
+  rpe_err_select:"Bitte Belastungsniveau auswählen."
 }
 };
 
@@ -335,8 +319,8 @@ function setLang(lang){
   LANG=lang;
   document.querySelectorAll(".lang-btn").forEach(function(b){b.classList.toggle("active",b.textContent===lang.toUpperCase());});
   applyLangStatic();
-  // Re-render current screen
   if(_currentTab==="wb") renderWbForm();
+  if(_currentTab==="rpe") renderRPE();
   if(_currentTab==="results") renderResults();
   if(_currentTab==="tests") renderTestsInfo();
 }
@@ -345,7 +329,7 @@ function applyLangStatic(){
   var ids={
     "login-sub":"login_sub","lbl-user":"lbl_user","opt-sel":"opt_sel","lbl-pin":"lbl_pin",
     "btn-login-txt":"btn_login","btn-logout-hdr":"btn_logout","foot-season":"season",
-    "tabl-wb":"tab_wb","tabl-results":"tab_results","tabl-tests":"tab_tests",
+    "tabl-wb":"tab_wb","tabl-results":"tab_results","tabl-tests":"tab_tests","tabl-rpe":"rpe_tab",
     "btn-new-entry":"btn_new_entry","suc-title":"suc_title","suc-sub":"suc_sub","suc-igp-lbl":"igp_lbl"
   };
   Object.keys(ids).forEach(function(id){
@@ -368,8 +352,11 @@ var _atleta=null;
 var _wb={sono:0,fadiga:0,dor:0,motivacao:0,estresse:0};
 var _wbKeys=["sono","fadiga","dor","motivacao","estresse"];
 var _wbQKeys=["q_sleep","q_fatigue","q_pain","q_motivation","q_stress"];
+var _presenca=null;
 var _currentTab="wb";
 var _avaliacoes=[];
+var _rpeSelected=null;
+var _rpeSubmitted=false;
 
 // ═══ Init ════════════════════════════════════════════════════════
 window.onload=function(){
@@ -394,7 +381,9 @@ function doLogin(){
   if(!a||a.pin!==pin){errEl.textContent=t("err_pin");errEl.style.display="block";document.getElementById("inp-pin").value="";return;}
   _atleta=a;
   _wb={sono:0,fadiga:0,dor:0,motivacao:0,estresse:0};
-  // Update header
+  _presenca=null;
+  _rpeSelected=null;
+  _rpeSubmitted=false;
   document.getElementById("hdr-avatar").textContent=a.nome.split(" ").slice(0,2).map(function(x){return x[0];}).join("").toUpperCase();
   document.getElementById("hdr-name").textContent=a.nome;
   document.getElementById("hdr-pos").textContent=a.pos;
@@ -402,7 +391,6 @@ function doLogin(){
   document.getElementById("main-tabs").classList.remove("hidden");
   document.getElementById("screen-login").classList.add("hidden");
   switchTab("wb");
-  // Pre-load avaliacoes
   loadAvaliacoes();
 }
 
@@ -411,25 +399,26 @@ function doLogout(){
   document.getElementById("main-header").classList.add("hidden");
   document.getElementById("main-tabs").classList.add("hidden");
   document.getElementById("screen-login").classList.remove("hidden");
-  ["wb","results","tests"].forEach(function(s){document.getElementById("screen-"+s).classList.add("hidden");});
+  ["wb","results","tests","rpe"].forEach(function(s){document.getElementById("screen-"+s).classList.add("hidden");});
   document.getElementById("inp-pin").value="";
   document.getElementById("inp-user").value="";
 }
 
 function switchTab(tab){
   _currentTab=tab;
-  ["wb","results","tests"].forEach(function(s){
+  ["wb","results","tests","rpe"].forEach(function(s){
     document.getElementById("screen-"+s).classList.add("hidden");
     document.getElementById("tab-"+s).classList.remove("active");
   });
   document.getElementById("screen-"+tab).classList.remove("hidden");
   document.getElementById("tab-"+tab).classList.add("active");
   if(tab==="wb") renderWbForm();
+  if(tab==="rpe") renderRPE();
   if(tab==="results") renderResults();
   if(tab==="tests") renderTestsInfo();
 }
 
-// ═══ Wellbeing ═══════════════════════════════════════════════════
+// ═══ Wellbeing + Presence ════════════════════════════════════════
 function igpV(w){return Math.round((w.sono+w.fadiga+w.dor+w.motivacao+w.estresse)/25*100);}
 function igpL(v){if(v>=80)return t("igp_full");if(v>=60)return t("igp_mod");if(v>=40)return t("igp_red");return t("igp_crit");}
 function igpCol(v){if(v>=80)return "var(--g7)";if(v>=60)return "var(--y7)";return "var(--r7)";}
@@ -451,11 +440,21 @@ function renderWbForm(){
   html+='<div style="margin-top:10px"><label class="form-label">'+t("sleep_lbl")+'</label>';
   html+='<input type="number" step="0.5" id="wb-hrs" placeholder="7.5" min="0" max="14" style="margin-top:4px"></div>';
   html+='</div>';
+
+  html+='<div class="card" style="border:2px solid var(--g1)">';
+  html+='<div class="card-title"><span class="ico">🏃</span>'+t("presence_title")+'</div>';
+  html+='<div style="display:flex;gap:10px">';
+  html+='<button onclick="setPresenca(true)" class="presence-btn" style="border-color:'+(_presenca===true?"var(--g7)":"var(--bds)")+';background:'+(_presenca===true?"var(--g7)":"var(--sur)")+';color:'+(_presenca===true?"#fff":"var(--t1)")+'">✓ '+t("presence_yes")+'</button>';
+  html+='<button onclick="setPresenca(false)" class="presence-btn" style="border-color:'+(_presenca===false?"var(--r7)":"var(--bds)")+';background:'+(_presenca===false?"var(--r7)":"var(--sur)")+';color:'+(_presenca===false?"#fff":"var(--t1)")+'">✕ '+t("presence_no")+'</button>';
+  html+='</div></div>';
+
   html+='<button class="btn" id="btn-send" onclick="sendWb()" style="margin-bottom:16px"><span id="btn-send-txt">'+t("btn_send")+'</span></button>';
   fa.innerHTML=html;
   document.getElementById("wb-form-area").classList.remove("hidden");
   document.getElementById("wb-success-area").classList.add("hidden");
 }
+
+function setPresenca(val){ _presenca=val; renderWbForm(); }
 
 function setWb(k,v){
   _wb[k]=v;
@@ -465,6 +464,7 @@ function setWb(k,v){
 function sendWb(){
   var missing=_wbKeys.filter(function(k){return _wb[k]===0;});
   if(missing.length){alert(LANG==="de"?"Bitte alle Fragen beantworten.":"Preencha todas as respostas.");return;}
+  if(_presenca===null){alert(t("presence_err"));return;}
   var igp=igpV(_wb);
   var btn=document.getElementById("btn-send");
   btn.disabled=true;
@@ -476,10 +476,11 @@ function sendWb(){
     +"&data="+today
     +"&sono="+_wb.sono+"&fadiga="+_wb.fadiga+"&dor="+_wb.dor
     +"&motivacao="+_wb.motivacao+"&estresse="+_wb.estresse
-    +"&horas_sono="+sleep+"&igp="+igp;
+    +"&horas_sono="+sleep+"&igp="+igp
+    +"&presenca="+(_presenca?"1":"0");
   fetch(SCRIPT_URL+"?"+params,{method:"GET",mode:"no-cors"})
     .then(function(){showWbSuccess(igp);})
-    .catch(function(){showWbSuccess(igp);}); // show success even with no-cors
+    .catch(function(){showWbSuccess(igp);});
 }
 
 function showWbSuccess(igp){
@@ -496,7 +497,66 @@ function showWbSuccess(igp){
 
 function resetWbForm(){
   _wb={sono:0,fadiga:0,dor:0,motivacao:0,estresse:0};
+  _presenca=null;
   renderWbForm();
+}
+
+// ═══ RPE (simplificado — sem dependência de sessão) ═══════════════
+function renderRPE(){
+  var el=document.getElementById("screen-rpe");
+  if(!el) return;
+
+  if(_rpeSubmitted){
+    el.innerHTML='<div class="card" style="text-align:center;padding:32px 16px">'
+      +'<div style="font-size:48px;margin-bottom:12px">✅</div>'
+      +'<div style="font-size:18px;font-weight:700;color:var(--g7);margin-bottom:6px">'+t("rpe_saved")+'</div>'
+      +(_rpeSelected!==null?'<div style="font-size:14px;color:var(--t2)">RPE: <b>'+_rpeSelected+'/10</b></div>':'')
+      +'</div>';
+    return;
+  }
+
+  var today=new Date().toLocaleDateString(LANG==="de"?"de-DE":"pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+  var html='';
+  html+='<div class="card" style="margin-bottom:12px">';
+  html+='<div class="card-title"><span class="ico">⚡</span>'+t("rpe_title")+'</div>';
+  html+='<div style="font-size:13px;color:var(--t3);margin-bottom:14px">'+today+'</div>';
+  html+='<div style="font-size:13px;color:var(--t2);margin-bottom:14px">'+t("rpe_sub")+'</div>';
+
+  var rpeColors=["#90a4ae","#a5d6a7","#c8e6c9","#fff176","#ffee58","#ffa726","#ff7043","#ef5350","#e53935","#c62828","#b71c1c"];
+  var rpeLabels=[t("rpe_hint_0"),"1",t("rpe_hint_1"),"3",t("rpe_hint_3"),"5",t("rpe_hint_5"),"7",t("rpe_hint_7"),"9",t("rpe_hint_9")];
+
+  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">';
+  for(var i=0;i<=10;i++){
+    var col=rpeColors[i];
+    var lbl=rpeLabels[i]||String(i);
+    var isSel=_rpeSelected===i;
+    html+='<button onclick="selectRPE('+i+')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:2px solid '+(isSel?"#1a1d23":col)+';background:'+(isSel?col+"dd":col+"33")+';cursor:pointer;font-family:inherit;transition:all .15s;text-align:left;width:100%">';
+    html+='<span style="width:30px;height:30px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0;text-shadow:0 1px 2px rgba(0,0,0,.4)">'+i+'</span>';
+    html+='<span style="font-size:13px;color:#1a1d23;font-weight:'+(isSel?"700":"400")+'">'+lbl+'</span>';
+    if(isSel) html+='<span style="margin-left:auto;font-size:16px">✓</span>';
+    html+='</button>';
+  }
+  html+='</div>';
+  html+='<button class="btn" id="btn-rpe-send" onclick="sendRPE()" '+((_rpeSelected===null)?'disabled style="opacity:.5"':'')+'><span id="btn-rpe-txt">'+t("rpe_btn")+'</span></button>';
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function selectRPE(val){ _rpeSelected=val; renderRPE(); }
+
+function sendRPE(){
+  if(_rpeSelected===null){ alert(t("rpe_err_select")); return; }
+  var btn=document.getElementById("btn-rpe-send");
+  if(btn){ btn.disabled=true; document.getElementById("btn-rpe-txt").textContent=t("rpe_sending"); }
+  var today=new Date().toISOString().slice(0,10);
+  var params="acao=save_rpe"
+    +"&atleta_id="+encodeURIComponent(_atleta.id)
+    +"&atleta_nome="+encodeURIComponent(_atleta.nome)
+    +"&data="+today
+    +"&rpe="+_rpeSelected;
+  fetch(SCRIPT_URL+"?"+params,{method:"GET",mode:"no-cors"})
+    .then(function(){ _rpeSubmitted=true; renderRPE(); })
+    .catch(function(){ _rpeSubmitted=true; renderRPE(); });
 }
 
 // ═══ Load Avaliacoes from Sheets ════════════════════════════════
@@ -513,8 +573,7 @@ function loadAvaliacoes(){
 }
 
 // ═══ Results Screen ══════════════════════════════════════════════
-function clf(val, thresholds, labels, reverse){
-  // thresholds: [exc, bom] — reverse=true means lower is better
+function clf(val, thresholds, reverse){
   if(!val||val===0) return "";
   var ok = reverse ? (val<=thresholds[0]) : (val>=thresholds[0]);
   var med= reverse ? (val<=thresholds[1]) : (val>=thresholds[1]);
@@ -540,53 +599,40 @@ function renderResults(){
   var last=_avaliacoes[_avaliacoes.length-1];
   var html='';
 
-  // Header
   html+='<div class="card"><div class="card-title"><span class="ico">📊</span>'+t("results_title")+'</div>';
   html+='<div style="font-size:12px;color:var(--t3);margin-bottom:10px">'+t("period_lbl")+': <b>'+last.periodo+'</b></div>';
 
-  // Composição
   html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">'+t("comp_title")+'</div>';
   html+='<div class="g3" style="margin-bottom:14px">';
   html+='<div class="metric-mini"><div class="metric-mini-val">'+last.peso+' kg</div><div class="metric-mini-lbl">'+t("peso_lbl")+'</div></div>';
-  if(last.gord){
-    var gordCls=last.gord<10?"bg":last.gord<14?"by":"br";
-    html+='<div class="metric-mini"><div class="metric-mini-val" style="color:'+(last.gord<10?"var(--g7)":last.gord<14?"var(--y7)":"var(--r7)")+'">'+last.gord+'%</div><div class="metric-mini-lbl">'+t("gord_navy")+'</div></div>';
-  }
+  if(last.gord) html+='<div class="metric-mini"><div class="metric-mini-val" style="color:'+(last.gord<10?"var(--g7)":last.gord<14?"var(--y7)":"var(--r7)")+'">'+last.gord+'%</div><div class="metric-mini-lbl">'+t("gord_navy")+'</div></div>';
   if(last.magra) html+='<div class="metric-mini"><div class="metric-mini-val" style="color:var(--g7)">'+last.magra+' kg</div><div class="metric-mini-lbl">'+t("magra_lbl")+'</div></div>';
   html+='</div>';
 
-  // Assimetria
   if(last.coxaE||last.coxaD){
     html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">'+t("asym_title")+'</div>';
-    function asymRow(lbl, esq, dir){
+    function asymRow(lbl,esq,dir){
       if(!esq&&!dir) return "";
       var diff=Math.abs(esq-dir);
-      return '<div class="result-row"><div class="result-label">'+lbl+'</div>'
-        +'<div style="display:flex;align-items:center;gap:8px">'
-        +'<span style="font-size:12px;color:var(--b7)">⬅ '+esq+'cm</span>'
-        +'<span style="font-size:12px;color:var(--g7)">'+dir+'cm ➡</span>'
-        +asymClass(diff)+'</div></div>';
+      return '<div class="result-row"><div class="result-label">'+lbl+'</div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--b7)">⬅ '+esq+'cm</span><span style="font-size:12px;color:var(--g7)">'+dir+'cm ➡</span>'+asymClass(diff)+'</div></div>';
     }
-    html+=asymRow(t("coxa_lbl"), last.coxaE, last.coxaD);
-    html+=asymRow(t("pant_lbl"), last.pantE, last.pantD);
+    html+=asymRow(t("coxa_lbl"),last.coxaE,last.coxaD);
+    html+=asymRow(t("pant_lbl"),last.pantE,last.pantD);
     html+='<div style="height:10px"></div>';
   }
 
-  // Testes físicos
   html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">'+t("tests_title")+'</div>';
-  function testRow(lbl, val, unit, th1, th2, rev){
+  function testRow(lbl,val,unit,th1,th2,rev){
     if(!val) return "";
-    return '<div class="result-row"><div class="result-label">'+lbl+'</div>'
-      +'<div style="display:flex;align-items:center;gap:8px"><span class="result-value">'+val+' '+unit+'</span>'+clf(val,[th1,th2],[],rev)+'</div></div>';
+    return '<div class="result-row"><div class="result-label">'+lbl+'</div><div style="display:flex;align-items:center;gap:8px"><span class="result-value">'+val+' '+unit+'</span>'+clf(val,[th1,th2],rev)+'</div></div>';
   }
-  html+=testRow(t("prancha"), last.prancha, "s", 120, 90, false);
-  html+=testRow(t("s10"),     last.s10,     "s", 1.80, 1.99, true);
-  html+=testRow(t("s30"),     last.s30,     "s", 4.00, 4.30, true);
-  html+=testRow(t("salto"),   last.salto,   "cm",220,  200,  false);
-  html+=testRow(t("bip"),     last.bip,     "m", 1800, 1400, false);
+  html+=testRow(t("prancha"),last.prancha,"s",120,90,false);
+  html+=testRow(t("s10"),last.s10,"s",1.80,1.99,true);
+  html+=testRow(t("s30"),last.s30,"s",4.00,4.30,true);
+  html+=testRow(t("salto"),last.salto,"cm",220,200,false);
+  html+=testRow(t("bip"),last.bip,"m",1800,1400,false);
   html+='</div>';
 
-  // Evolution charts (if more than 1 assessment)
   if(_avaliacoes.length>1){
     html+='<div class="card"><div class="card-title"><span class="ico">📈</span>'+t("evolution_title")+'</div>';
     html+='<canvas id="ch-evo" height="200" role="img" aria-label="evolution">.</canvas></div>';
@@ -594,22 +640,15 @@ function renderResults(){
 
   el.innerHTML=html;
 
-  // Build chart if multiple assessments
   if(_avaliacoes.length>1){
     var labels=_avaliacoes.map(function(a){return a.periodo||"";});
     setTimeout(function(){
       var ctx=document.getElementById("ch-evo");
       if(!ctx) return;
-      new Chart(ctx,{
-        type:"line",
-        data:{labels:labels,datasets:[
-          {label:"BIP (m)",   data:_avaliacoes.map(function(a){return a.bip;}),   borderColor:"#2e7d32",backgroundColor:"#2e7d3222",tension:.35,pointRadius:4,yAxisID:"y"},
-          {label:"Salto (cm)",data:_avaliacoes.map(function(a){return a.salto;}), borderColor:"#1565c0",backgroundColor:"#1565c022",tension:.35,pointRadius:4,yAxisID:"y"},
-        ]},
-        options:{responsive:true,maintainAspectRatio:false,
-          plugins:{legend:{position:"top",labels:{boxWidth:10,font:{size:11}}}},
-          scales:{y:{grid:{color:"rgba(0,0,0,.05)"}}}}
-      });
+      new Chart(ctx,{type:"line",data:{labels:labels,datasets:[
+        {label:"BIP (m)",data:_avaliacoes.map(function(a){return a.bip;}),borderColor:"#2e7d32",backgroundColor:"#2e7d3222",tension:.35,pointRadius:4},
+        {label:"Salto (cm)",data:_avaliacoes.map(function(a){return a.salto;}),borderColor:"#1565c0",backgroundColor:"#1565c022",tension:.35,pointRadius:4}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{boxWidth:10,font:{size:11}}}},scales:{y:{grid:{color:"rgba(0,0,0,.05)"}}}}});
     },50);
   }
 }
@@ -622,10 +661,8 @@ function renderTestsInfo(){
   var html='<div class="card-title" style="margin-bottom:12px"><span class="ico">📋</span>'+t("tests_info_title")+'</div>';
   tests.forEach(function(k,i){
     html+='<div class="test-card">';
-    html+='<div class="test-card-header">';
-    html+='<div class="test-num">'+(i+1)+'</div>';
-    html+='<div><div class="test-name">'+icons[i]+" "+t(k+"_name")+'</div><div class="test-sub">'+t(k+"_sub")+'</div></div>';
-    html+='</div>';
+    html+='<div class="test-card-header"><div class="test-num">'+(i+1)+'</div>';
+    html+='<div><div class="test-name">'+icons[i]+" "+t(k+"_name")+'</div><div class="test-sub">'+t(k+"_sub")+'</div></div></div>';
     html+='<div class="test-body">'+t(k+"_body")+'</div>';
     html+='</div>';
   });
