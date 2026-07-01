@@ -205,6 +205,12 @@ pt:{
   comp_title:"Composição corporal",
   peso_lbl:"Peso", gord_navy:"% Gordura (Marinha)",
   magra_lbl:"Massa magra",
+  gord_excedente:"Gordura excedente",
+  peso_ideal_lbl:"Ajuste de peso recomendado",
+  peso_ideal_ok:"Composição dentro do intervalo ideal para futebol",
+  peso_ideal_emagrecer:"Reduzir para atingir o ideal",
+  peso_ideal_ganhar:"Ganhar massa magra para atingir o ideal",
+  metodo_aviso:"⚠️ Valores estimados pelo protocolo Marinha Americana + Jackson & Pollock. Servem como direcionamento — não substituem avaliação clínica individualizada.",
   asym_title:"Assimetria bilateral",
   coxa_lbl:"Coxa", pant_lbl:"Panturrilha",
   asym_ok:"Simetria adequada", asym_warn:"Atenção: assimetria moderada", asym_alert:"Assimetria significativa",
@@ -270,6 +276,12 @@ de:{
   comp_title:"Körperzusammensetzung",
   peso_lbl:"Gewicht", gord_navy:"% Körperfett (Marine)",
   magra_lbl:"Magermasse",
+  gord_excedente:"Überschüssiges Fett",
+  peso_ideal_lbl:"Empfohlene Gewichtsanpassung",
+  peso_ideal_ok:"Körperzusammensetzung im idealen Bereich für Fußball",
+  peso_ideal_emagrecer:"Reduzieren, um das Ideal zu erreichen",
+  peso_ideal_ganhar:"Muskelmasse aufbauen, um das Ideal zu erreichen",
+  metodo_aviso:"⚠️ Geschätzte Werte nach US-Marine + Jackson & Pollock Protokoll. Dienen als Orientierung — kein Ersatz für individuelle klinische Bewertung.",
   asym_title:"Bilaterale Asymmetrie",
   coxa_lbl:"Oberschenkel", pant_lbl:"Wade",
   asym_ok:"Symmetrie ausreichend", asym_warn:"Achtung: moderate Asymmetrie", asym_alert:"Erhebliche Asymmetrie",
@@ -618,11 +630,48 @@ function renderResults(){
   html+='<div style="font-size:12px;color:var(--t3);margin-bottom:10px">'+t("period_lbl")+': <b>'+last.periodo+'</b></div>';
 
   html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">'+t("comp_title")+'</div>';
-  html+='<div class="g3" style="margin-bottom:14px">';
-  html+='<div class="metric-mini"><div class="metric-mini-val">'+last.peso+' kg</div><div class="metric-mini-lbl">'+t("peso_lbl")+'</div></div>';
-  if(last.gord) html+='<div class="metric-mini"><div class="metric-mini-val" style="color:'+(last.gord<10?"var(--g7)":last.gord<14?"var(--y7)":"var(--r7)")+'">'+last.gord+'%</div><div class="metric-mini-lbl">'+t("gord_navy")+'</div></div>';
-  if(last.magra) html+='<div class="metric-mini"><div class="metric-mini-val" style="color:var(--g7)">'+last.magra+' kg</div><div class="metric-mini-lbl">'+t("magra_lbl")+'</div></div>';
+  // Calculos de composicao
+  var gordPct = parseFloat(last.gord)||0;
+  var peso    = parseFloat(last.peso)||0;
+  var magra   = parseFloat(last.magra)||0;
+  var gordKg  = gordPct>0&&peso>0 ? Math.round((peso*(gordPct/100))*10)/10 : 0;
+  // Referencia: ideal para futebol masculino = 8-14% gordura
+  var gordIdealMin = 8, gordIdealMax = 14;
+  var pesoIdealMin = magra>0 ? Math.round(magra/(1-gordIdealMax/100)*10)/10 : 0;
+  var pesoIdealMax = magra>0 ? Math.round(magra/(1-gordIdealMin/100)*10)/10 : 0;
+  var gordExcedente = gordPct>gordIdealMax&&gordKg>0 ? Math.round((gordKg - peso*(gordIdealMax/100))*10)/10 : 0;
+  var gordFalta     = gordPct>0&&gordPct<gordIdealMin&&magra>0 ? Math.round((pesoIdealMin-peso)*10)/10 : 0;
+
+  html+='<div class="g3" style="margin-bottom:10px">';
+  html+='<div class="metric-mini"><div class="metric-mini-val">'+peso+' kg</div><div class="metric-mini-lbl">'+t("peso_lbl")+'</div></div>';
+  if(gordPct) html+='<div class="metric-mini"><div class="metric-mini-val" style="color:'+(gordPct<gordIdealMin?"var(--b7)":gordPct<=gordIdealMax?"var(--g7)":gordPct<=16?"var(--y7)":"var(--r7)")+'">'+gordPct+'%</div><div class="metric-mini-lbl">'+t("gord_navy")+'</div></div>';
+  if(magra)   html+='<div class="metric-mini"><div class="metric-mini-val" style="color:var(--g7)">'+magra+' kg</div><div class="metric-mini-lbl">'+t("magra_lbl")+'</div></div>';
   html+='</div>';
+
+  // Bloco gordura excedente / ajuste de peso
+  if(gordPct&&peso&&magra){
+    if(gordPct>=gordIdealMin&&gordPct<=gordIdealMax){
+      html+='<div class="alert alert-ok" style="margin-bottom:10px"><span>✅</span><div>'+t("peso_ideal_ok")+'<br><small style="opacity:.8">'+gordIdealMin+'–'+gordIdealMax+'% — Faixa ideal para futebol</small></div></div>';
+    } else if(gordPct>gordIdealMax){
+      html+='<div style="background:var(--r5);border:1px solid #ef9a9a;border-radius:10px;padding:12px 14px;margin-bottom:10px">';
+      html+='<div style="font-size:12px;font-weight:700;color:var(--r7);margin-bottom:6px">📊 '+t("gord_excedente")+'</div>';
+      html+='<div class="g2" style="gap:8px">';
+      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--r7)">'+gordKg+' kg</div><div class="metric-mini-lbl">Gordura total</div></div>';
+      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--y7)">'+gordExcedente+' kg</div><div class="metric-mini-lbl">Excedente</div></div>';
+      html+='</div>';
+      html+='<div style="margin-top:8px;font-size:13px;color:var(--r7)"><b>'+t("peso_ideal_emagrecer")+': '+gordExcedente+' kg</b></div>';
+      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">Peso ideal estimado: '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
+      html+='</div>';
+    } else if(gordPct<gordIdealMin){
+      html+='<div style="background:var(--b5);border:1px solid #90caf9;border-radius:10px;padding:12px 14px;margin-bottom:10px">';
+      html+='<div style="font-size:12px;font-weight:700;color:var(--b7);margin-bottom:6px">💪 '+t("peso_ideal_ganhar")+'</div>';
+      html+='<div style="font-size:13px;color:var(--b7)"><b>+'+Math.abs(gordFalta)+' kg de massa magra</b></div>';
+      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">Peso ideal estimado: '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
+      html+='</div>';
+    }
+    // Aviso metodologico
+    html+='<div style="background:var(--y5);border:1px solid #ffe082;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px;color:#5d3f00;line-height:1.5">'+t("metodo_aviso")+'</div>';
+  }
 
   if(last.coxaE||last.coxaD){
     html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">'+t("asym_title")+'</div>';
