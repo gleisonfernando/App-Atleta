@@ -452,8 +452,22 @@ function igpCol(v){if(v>=80)return "var(--g7)";if(v>=60)return "var(--y7)";retur
 
 function renderWbForm(){
   var fa=document.getElementById("wb-form-area");
-  var today=new Date().toLocaleDateString(LANG==="de"?"de-DE":"pt-BR",{weekday:"long",day:"2-digit",month:"long"});
-  var html='<div class="card"><div class="card-title"><span class="ico">📅</span>'+today+'</div>';
+  var todayIso=new Date().toISOString().slice(0,10);
+  var todayFmt=new Date().toLocaleDateString(LANG==="de"?"de-DE":"pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+  // Use selected date if set, otherwise today
+  var selDate=document.getElementById("wb-date-sel")?document.getElementById("wb-date-sel").value:todayIso;
+  if(!selDate) selDate=todayIso;
+  var isRetro = selDate !== todayIso;
+  var dateLabel = isRetro
+    ? '<span style="color:var(--y7);font-size:12px;margin-left:6px;background:var(--y5);padding:2px 8px;border-radius:10px">'+( LANG==="de"?"Nachträgliche Eingabe":"Registo retroativo")+'</span>'
+    : '';
+
+  var html='<div class="card">';
+  html+='<div class="card-title"><span class="ico">📅</span>'+(isRetro?( LANG==="de"?"Datum":t("date_lbl")||"Data"):todayFmt)+dateLabel+'</div>';
+  html+='<div style="margin-bottom:12px">';
+  html+='<label class="form-label" style="font-size:11px;color:var(--t3);margin-bottom:4px;display:block">'+(LANG==="de"?"Datum auswählen":"Selecionar data")+'</label>';
+  html+='<input type="date" id="wb-date-sel" value="'+selDate+'" max="'+todayIso+'" onchange="renderWbForm()" style="font-size:14px;padding:8px 12px;border:1.5px solid var(--bds);border-radius:8px;width:100%">';
+  html+='</div>';
   html+='<div style="font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">'+t("wb_title")+'</div>';
   _wbQKeys.forEach(function(qk,idx){
     var q=t(qk);var k=_wbKeys[idx];
@@ -496,11 +510,13 @@ function sendWb(){
   var btn=document.getElementById("btn-send");
   btn.disabled=true;
   btn.innerHTML='<span class="spinner"></span>'+t("btn_sending");
-  var today=new Date().toISOString().slice(0,10);
+  // Use selected date (retroactive support)
+  var dateEl=document.getElementById("wb-date-sel");
+  var selectedDate=dateEl?dateEl.value:new Date().toISOString().slice(0,10);
   var sleep=parseFloat(document.getElementById("wb-hrs").value)||0;
   var params="atleta_id="+encodeURIComponent(_atleta.id)
     +"&atleta_nome="+encodeURIComponent(_atleta.nome)
-    +"&data="+today
+    +"&data="+selectedDate
     +"&sono="+_wb.sono+"&fadiga="+_wb.fadiga+"&dor="+_wb.dor
     +"&motivacao="+_wb.motivacao+"&estresse="+_wb.estresse
     +"&horas_sono="+sleep+"&igp="+igp
@@ -525,6 +541,9 @@ function showWbSuccess(igp){
 function resetWbForm(){
   _wb={sono:0,fadiga:0,dor:0,motivacao:0,estresse:0};
   _presenca=null;
+  // Reset date to today
+  var dateEl=document.getElementById("wb-date-sel");
+  if(dateEl) dateEl.value=new Date().toISOString().slice(0,10);
   renderWbForm();
 }
 
