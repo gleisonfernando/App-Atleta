@@ -252,6 +252,10 @@ pt:{
   peso_ideal_emagrecer:"Reduzir para atingir o ideal",
   peso_ideal_ganhar:"Ganhar massa magra para atingir o ideal",
   metodo_aviso:"⚠️ Valores estimados pelo protocolo Marinha Americana + Jackson & Pollock. Servem como direcionamento — não substituem avaliação clínica individualizada.",
+  gord_total_lbl:"Gordura total",
+  excedente_lbl:"Excedente",
+  peso_ideal_est:"Peso ideal estimado",
+  faixa_ideal:"Faixa ideal para futebol",
   asym_title:"Assimetria bilateral",
   coxa_lbl:"Coxa", pant_lbl:"Panturrilha",
   asym_ok:"Simetria adequada", asym_warn:"Atenção: assimetria moderada", asym_alert:"Assimetria significativa",
@@ -323,6 +327,10 @@ de:{
   peso_ideal_emagrecer:"Reduzieren, um das Ideal zu erreichen",
   peso_ideal_ganhar:"Muskelmasse aufbauen, um das Ideal zu erreichen",
   metodo_aviso:"⚠️ Geschätzte Werte nach US-Marine + Jackson & Pollock Protokoll. Dienen als Orientierung — kein Ersatz für individuelle klinische Bewertung.",
+  gord_total_lbl:"Gesamtfett",
+  excedente_lbl:"Überschuss",
+  peso_ideal_est:"Idealgewicht geschätzt",
+  faixa_ideal:"Idealbereich für Fußball",
   asym_title:"Bilaterale Asymmetrie",
   coxa_lbl:"Oberschenkel", pant_lbl:"Wade",
   asym_ok:"Symmetrie ausreichend", asym_warn:"Achtung: moderate Asymmetrie", asym_alert:"Erhebliche Asymmetrie",
@@ -711,22 +719,22 @@ function renderResults(){
   // Bloco gordura excedente / ajuste de peso
   if(gordPct&&peso&&magra){
     if(gordPct>=gordIdealMin&&gordPct<=gordIdealMax){
-      html+='<div class="alert alert-ok" style="margin-bottom:10px"><span>✅</span><div>'+t("peso_ideal_ok")+'<br><small style="opacity:.8">'+gordIdealMin+'–'+gordIdealMax+'% — Faixa ideal para futebol</small></div></div>';
+      html+='<div class="alert alert-ok" style="margin-bottom:10px"><span>✅</span><div>'+t("peso_ideal_ok")+'<br><small style="opacity:.8">'+gordIdealMin+'–'+gordIdealMax+'% — '+t("faixa_ideal")+'</small></div></div>';
     } else if(gordPct>gordIdealMax){
       html+='<div style="background:var(--r5);border:1px solid #ef9a9a;border-radius:10px;padding:12px 14px;margin-bottom:10px">';
       html+='<div style="font-size:12px;font-weight:700;color:var(--r7);margin-bottom:6px">📊 '+t("gord_excedente")+'</div>';
       html+='<div class="g2" style="gap:8px">';
-      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--r7)">'+gordKg+' kg</div><div class="metric-mini-lbl">Gordura total</div></div>';
-      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--y7)">'+gordExcedente+' kg</div><div class="metric-mini-lbl">Excedente</div></div>';
+      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--r7)">'+gordKg+' kg</div><div class="metric-mini-lbl">'+t("gord_total_lbl")+'</div></div>';
+      html+='<div class="metric-mini" style="background:var(--sur)"><div class="metric-mini-val" style="color:var(--y7)">'+gordExcedente+' kg</div><div class="metric-mini-lbl">'+t("excedente_lbl")+'</div></div>';
       html+='</div>';
       html+='<div style="margin-top:8px;font-size:13px;color:var(--r7)"><b>'+t("peso_ideal_emagrecer")+': '+gordExcedente+' kg</b></div>';
-      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">Peso ideal estimado: '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
+      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">'+t("peso_ideal_est")+': '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
       html+='</div>';
     } else if(gordPct<gordIdealMin){
       html+='<div style="background:var(--b5);border:1px solid #90caf9;border-radius:10px;padding:12px 14px;margin-bottom:10px">';
       html+='<div style="font-size:12px;font-weight:700;color:var(--b7);margin-bottom:6px">💪 '+t("peso_ideal_ganhar")+'</div>';
-      html+='<div style="font-size:13px;color:var(--b7)"><b>+'+Math.abs(gordFalta)+' kg de massa magra</b></div>';
-      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">Peso ideal estimado: '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
+      html+='<div style="font-size:13px;color:var(--b7)"><b>+'+Math.abs(gordFalta)+' kg '+t("magra_lbl").toLowerCase()+'</b></div>';
+      html+='<div style="font-size:11px;color:var(--t3);margin-top:2px">'+t("peso_ideal_est")+': '+pesoIdealMin+'–'+pesoIdealMax+' kg</div>';
       html+='</div>';
     }
     // Aviso metodologico
