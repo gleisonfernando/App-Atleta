@@ -284,6 +284,8 @@ pt:{
   presence_title:"Vais treinar hoje?",
   presence_yes:"Sim, vou", presence_no:"Não vou",
   presence_err:"Confirme se vais treinar hoje.",
+  presence_only_btn:"Enviar só a presença",
+  presence_only_hint:"Sem tempo? Confirma só a presença →",
   rpe_title:"Como foi o treino de hoje?",
   rpe_sub:"Avalia o esforço geral que sentiste na sessão.",
   rpe_hint_0:"Repouso",
@@ -359,6 +361,8 @@ de:{
   presence_title:"Trainierst du heute?",
   presence_yes:"Ja, ich komme", presence_no:"Nein, ich komme nicht",
   presence_err:"Bitte bestätige, ob du heute trainierst.",
+  presence_only_btn:"Nur Anwesenheit senden",
+  presence_only_hint:"Keine Zeit? Nur Anwesenheit bestätigen →",
   rpe_title:"Wie war das heutige Training?",
   rpe_sub:"Bewerte die allgemeine Anstrengung, die du in der Einheit gespürt hast.",
   rpe_hint_0:"Ruhe",
@@ -531,12 +535,14 @@ function renderWbForm(){
   html+='<input type="number" step="0.5" id="wb-hrs" placeholder="7.5" min="0" max="14" style="margin-top:4px"></div>';
   html+='</div>';
 
-  html+='<div class="card" style="border:2px solid var(--g1)">';
+  html+='<div class="card" style="border:2px solid var(--r1)">';
   html+='<div class="card-title"><span class="ico">🏃</span>'+t("presence_title")+'</div>';
-  html+='<div style="display:flex;gap:10px">';
-  html+='<button onclick="setPresenca(true)" class="presence-btn" style="border-color:'+(_presenca===true?"var(--g7)":"var(--bds)")+';background:'+(_presenca===true?"var(--g7)":"var(--sur)")+';color:'+(_presenca===true?"#fff":"var(--t1)")+'">✓ '+t("presence_yes")+'</button>';
-  html+='<button onclick="setPresenca(false)" class="presence-btn" style="border-color:'+(_presenca===false?"var(--r7)":"var(--bds)")+';background:'+(_presenca===false?"var(--r7)":"var(--sur)")+';color:'+(_presenca===false?"#fff":"var(--t1)")+'">✕ '+t("presence_no")+'</button>';
-  html+='</div></div>';
+  html+='<div style="display:flex;gap:10px;margin-bottom:10px">';
+  html+='<button onclick="setPresenca(true)" class="presence-btn" style="border-color:'+(_presenca===true?"var(--r7)":"var(--bds)")+';background:'+(_presenca===true?"var(--r7)":"var(--sur)")+';color:'+(_presenca===true?"#fff":"var(--t1)")+'">✓ '+t("presence_yes")+'</button>';
+  html+='<button onclick="setPresenca(false)" class="presence-btn" style="border-color:'+(_presenca===false?"#b71c1c":"var(--bds)")+';background:'+(_presenca===false?"#b71c1c":"var(--sur)")+';color:'+(_presenca===false?"#fff":"var(--t1)")+'">✕ '+t("presence_no")+'</button>';
+  html+='</div>';
+  html+='<button id="btn-presence-only" onclick="sendPresencaOnly()" style="width:100%;padding:9px;border-radius:8px;border:1.5px solid var(--r7);background:transparent;color:var(--r7);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">'+t("presence_only_btn")+'</button>';
+  html+='</div>';
 
   html+='<button class="btn" id="btn-send" onclick="sendWb()" style="margin-bottom:16px"><span id="btn-send-txt">'+t("btn_send")+'</span></button>';
   fa.innerHTML=html;
@@ -551,6 +557,30 @@ function setWb(k,v){
   document.getElementById("rb-"+k).querySelectorAll(".rb").forEach(function(b,i){b.classList.toggle("active",i+1===v);});
 }
 
+function sendPresencaOnly(){
+  if(_presenca===null){alert(t("presence_err"));return;}
+  var dateEl=document.getElementById("wb-date-sel");
+  var selectedDate=dateEl?dateEl.value:new Date().toISOString().slice(0,10);
+  var btn=document.getElementById("btn-presence-only");
+  if(btn){btn.disabled=true;btn.textContent=t("btn_sending");}
+  var params="atleta_id="+encodeURIComponent(_atleta.id)
+    +"&atleta_nome="+encodeURIComponent(_atleta.nome)
+    +"&data="+selectedDate
+    +"&sono=0&fadiga=0&dor=0&motivacao=0&estresse=0&horas_sono=0&igp=0"
+    +"&presenca="+(_presenca?"1":"0");
+  fetch(SCRIPT_URL+"?"+params,{method:"GET",mode:"no-cors"})
+    .then(function(){
+      var msg=_presenca
+        ?(LANG==="de"?"Anwesenheit bestätigt! ✅":"Presença confirmada! ✅")
+        :(LANG==="de"?"Abwesenheit bestätigt! ✅":"Ausência confirmada! ✅");
+      alert(msg);
+      if(btn){btn.disabled=false;btn.textContent=t("presence_only_btn");}
+    })
+    .catch(function(){
+      if(btn){btn.disabled=false;btn.textContent=t("presence_only_btn");}
+    });
+}
+
 function sendWb(){
   var missing=_wbKeys.filter(function(k){return _wb[k]===0;});
   if(missing.length){alert(LANG==="de"?"Bitte alle Fragen beantworten.":"Preencha todas as respostas.");return;}
@@ -559,7 +589,6 @@ function sendWb(){
   var btn=document.getElementById("btn-send");
   btn.disabled=true;
   btn.innerHTML='<span class="spinner"></span>'+t("btn_sending");
-  // Use selected date (retroactive support)
   var dateEl=document.getElementById("wb-date-sel");
   var selectedDate=dateEl?dateEl.value:new Date().toISOString().slice(0,10);
   var sleep=parseFloat(document.getElementById("wb-hrs").value)||0;
