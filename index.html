@@ -8,79 +8,101 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:#f0f4f0;color:#1a1d23}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:#f5f5f5;color:#1a1d23}
 :root{
-  --g9:#0d3318;--g7:#2e7d32;--g6:#388e3c;--g5:#e8f5e9;--g1:#c8e6c9;
-  --y7:#f57f17;--y5:#fffde7;--r7:#c62828;--r5:#ffebee;
-  --b7:#1565c0;--b5:#e3f2fd;
-  --sur:#fff;--sur2:#f7f8fa;--bdr:#e2e5ea;--bds:#c5cbd5;
+  /* SK Brederis — Vermelho e Branco */
+  --r9:#7f0000;--r8:#b71c1c;--r7:#c62828;--r6:#e53935;--r5:#ffebee;--r1:#ffcdd2;
+  --w:#ffffff;
+  /* Neutros */
+  --sur:#fff;--sur2:#fafafa;--bdr:#e8e8e8;--bds:#d0d0d0;
   --t1:#1a1d23;--t2:#4a5568;--t3:#8492a6;
+  /* Funcionais */
+  --g7:#2e7d32;--g5:#e8f5e9;--g1:#c8e6c9;
+  --y7:#f57f17;--y5:#fffde7;
+  --b7:#1565c0;--b5:#e3f2fd;
   --rad:12px;--shd:0 4px 24px rgba(0,0,0,.10)
 }
-body{min-height:100vh;background:#f0f4f0}
+body{min-height:100vh;background:#f5f5f5}
 .app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--sur);display:flex;flex-direction:column}
-.header{background:linear-gradient(135deg,var(--g9),var(--g7));padding:20px 20px 16px;flex-shrink:0}
+/* Header — vermelho escuro */
+.header{background:linear-gradient(135deg,var(--r9),var(--r7));padding:20px 20px 16px;flex-shrink:0}
 .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .brand{display:flex;align-items:center;gap:10px}
 .brand-icon{font-size:24px}
-.brand-name{color:#fff;font-size:18px;font-weight:700}
+.brand-name{color:#fff;font-size:18px;font-weight:700;letter-spacing:.02em}
 .lang-row{display:flex;gap:4px}
-.lang-btn{padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.35);background:transparent;color:rgba(255,255,255,.75);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
-.lang-btn.active{background:rgba(255,255,255,.25);color:#fff;border-color:rgba(255,255,255,.7)}
+.lang-btn{padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.4);background:transparent;color:rgba(255,255,255,.75);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.lang-btn.active{background:rgba(255,255,255,.25);color:#fff;border-color:#fff}
 .user-row{display:flex;align-items:center;gap:10px}
-.avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.4);flex-shrink:0}
+.avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.5);flex-shrink:0}
 .user-info{flex:1}
 .user-name{color:#fff;font-size:15px;font-weight:600}
 .user-pos{color:rgba(255,255,255,.65);font-size:12px}
-.logout-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit}
-.tabs{display:flex;background:var(--g9);border-top:1px solid rgba(255,255,255,.1);flex-shrink:0}
-.tab-btn{flex:1;padding:11px 4px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:10.5px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;border-bottom:2px solid transparent}
+.logout-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit}
+/* Tabs — vermelho escuro */
+.tabs{display:flex;background:var(--r9);border-top:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.tab-btn{flex:1;padding:11px 4px;border:none;background:transparent;color:rgba(255,255,255,.5);font-size:10.5px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;border-bottom:2px solid transparent}
 .tab-btn .ico{font-size:17px}
-.tab-btn.active{color:#fff;border-bottom-color:var(--g6)}
+.tab-btn.active{color:#fff;border-bottom-color:#fff}
 .content{flex:1;overflow-y:auto;padding:16px}
-.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .card-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .card-title .ico{font-size:16px}
-.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;min-height:60vh}
-.login-icon{font-size:56px;margin-bottom:16px}
-.login-title{font-size:20px;font-weight:700;margin-bottom:4px}
-.login-sub{font-size:13px;color:var(--t3);margin-bottom:28px;text-align:center}
+/* Login */
+.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;min-height:100vh;background:#fff}
+.login-hero{width:100%;background:linear-gradient(160deg,var(--r9),var(--r7));padding:48px 24px 40px;text-align:center;flex-shrink:0}
+.login-crest{font-size:64px;margin-bottom:12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3))}
+.login-club{color:#fff;font-size:22px;font-weight:800;letter-spacing:.04em;margin-bottom:4px}
+.login-tagline{color:rgba(255,255,255,.7);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.login-body{width:100%;padding:32px 24px 24px;background:#fff}
+.login-bilingual{text-align:center;margin-bottom:24px}
+.login-bilingual-pt{font-size:14px;font-weight:600;color:var(--t1)}
+.login-bilingual-de{font-size:13px;color:var(--t3);margin-top:2px}
 .form-group{width:100%;margin-bottom:14px}
-.form-label{display:block;font-size:12px;font-weight:600;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.form-label-bilingual{display:flex;justify-content:space-between;margin-bottom:5px}
+.form-label-bilingual span:first-child{font-size:11px;font-weight:600;color:var(--t1);text-transform:uppercase;letter-spacing:.06em}
+.form-label-bilingual span:last-child{font-size:11px;color:var(--t3)}
 select,input{width:100%;padding:11px 14px;border:1.5px solid var(--bds);border-radius:8px;font-size:15px;font-family:inherit;color:var(--t1);background:var(--sur);transition:border-color .15s}
-select:focus,input:focus{outline:none;border-color:var(--g7);box-shadow:0 0 0 3px rgba(46,125,50,.12)}
+select:focus,input:focus{outline:none;border-color:var(--r7);box-shadow:0 0 0 3px rgba(198,40,40,.12)}
 input[type=password]{letter-spacing:.15em;font-size:20px}
-.btn{width:100%;padding:13px;border-radius:8px;border:none;background:var(--g7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
-.btn:hover{background:var(--g9)}
+/* Botões — vermelho */
+.btn{width:100%;padding:13px;border-radius:8px;border:none;background:var(--r7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:hover{background:var(--r9)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-sm{padding:7px 16px;border-radius:8px;border:1.5px solid var(--bds);background:var(--sur);color:var(--t1);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
 .error{background:var(--r5);border:1px solid #ef9a9a;color:var(--r7);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;width:100%}
+/* Badges */
 .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
 .bg{background:var(--g5);color:#1b5e20}
 .by{background:var(--y5);color:var(--y7)}
 .br{background:var(--r5);color:var(--r7)}
 .bb{background:var(--b5);color:var(--b7)}
+/* Wellbeing */
 .wb-block{margin-bottom:14px}
 .wb-q{font-size:13px;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .wb-desc{font-size:11px;color:var(--t3);margin-bottom:7px}
 .rating-row{display:flex;gap:7px}
 .rb{flex:1;padding:10px 0;border:1.5px solid var(--bds);border-radius:8px;background:var(--sur);cursor:pointer;font-size:16px;font-weight:600;color:var(--t2);transition:all .12s;font-family:inherit;text-align:center}
-.rb:hover{border-color:var(--g6);color:var(--g7)}
-.rb.active{background:var(--g7);color:#fff;border-color:var(--g7)}
+.rb:hover{border-color:var(--r6);color:var(--r7)}
+.rb.active{background:var(--r7);color:#fff;border-color:var(--r7)}
 .igp-big{font-size:64px;font-weight:700;line-height:1;text-align:center;margin:12px 0 4px}
 .prog-bar{height:6px;background:var(--bdr);border-radius:3px;overflow:hidden;margin:4px 0}
-.prog-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.prog-fill{height:100%;background:var(--r7);border-radius:3px;transition:width .5s ease}
+/* Alerts */
 .alert{padding:10px 14px;border-radius:8px;font-size:13px;display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
 .alert-ok{background:var(--g5);color:#1b5e20;border:1px solid var(--g1)}
 .alert-warn{background:var(--y5);color:#5d3f00;border:1px solid #ffe082}
-.alert-err{background:var(--r5);color:var(--r7);border:1px solid #ef9a9a}
+.alert-err{background:var(--r5);color:var(--r7);border:1px solid var(--r1)}
 .alert-info{background:var(--b5);color:var(--b7);border:1px solid #90caf9}
+/* Tests */
 .test-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
 .test-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.test-num{width:28px;height:28px;border-radius:50%;background:var(--g7);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.test-num{width:28px;height:28px;border-radius:50%;background:var(--r7);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .test-name{font-size:14px;font-weight:600;color:var(--t1)}
 .test-sub{font-size:11px;color:var(--t3);margin-top:1px}
 .test-body{font-size:12.5px;color:var(--t2);line-height:1.6}
+/* Results */
 .result-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bdr)}
 .result-row:last-child{border-bottom:none}
 .result-label{font-size:13px;color:var(--t2)}
@@ -94,7 +116,7 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .success-screen{text-align:center;padding:32px 20px}
 .success-icon{font-size:56px;margin-bottom:12px}
-.success-title{font-size:20px;font-weight:700;color:var(--g7);margin-bottom:6px}
+.success-title{font-size:20px;font-weight:700;color:var(--r7);margin-bottom:6px}
 .success-sub{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:20px}
 .footer{text-align:center;font-size:11px;color:var(--t3);padding:10px 16px 20px;flex-shrink:0}
 .hidden{display:none!important}
@@ -139,20 +161,39 @@ input[type=password]{letter-spacing:.15em;font-size:20px}
 
   <div class="content" id="content">
 
-    <div id="screen-login" class="login-wrap">
-      <div class="login-icon">⚽</div>
-      <div class="login-title">SKBrederis 1B</div>
-      <div class="login-sub" id="login-sub">Registo de bem-estar e resultados</div>
-      <div class="error" id="login-err"></div>
-      <div class="form-group">
-        <label class="form-label" id="lbl-user">Jogador</label>
-        <select id="inp-user"><option value="" id="opt-sel">— selecionar —</option></select>
+    <div id="screen-login" style="display:flex;flex-direction:column;min-height:100vh;background:#fff">
+      <div class="login-hero">
+        <div class="login-crest">🔴⚽</div>
+        <div class="login-club">SK BREDERIS 1B</div>
+        <div class="login-tagline">Vorarlberg · Austria · 2026/27</div>
       </div>
-      <div class="form-group">
-        <label class="form-label" id="lbl-pin">PIN (4 dígitos)</label>
-        <input type="password" id="inp-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••" autocomplete="off">
+      <div class="login-body">
+        <div class="login-bilingual">
+          <div class="login-bilingual-pt">Registo de bem-estar e resultados</div>
+          <div class="login-bilingual-de">Wohlbefinden und Ergebnisse</div>
+        </div>
+        <div class="error" id="login-err"></div>
+        <div class="form-group">
+          <div class="form-label-bilingual">
+            <span id="lbl-user">Jogador</span>
+            <span>Spieler</span>
+          </div>
+          <select id="inp-user"><option value="" id="opt-sel">— selecionar / auswählen —</option></select>
+        </div>
+        <div class="form-group">
+          <div class="form-label-bilingual">
+            <span id="lbl-pin">PIN (4 dígitos)</span>
+            <span>PIN (4 Ziffern)</span>
+          </div>
+          <input type="password" id="inp-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••" autocomplete="off">
+        </div>
+        <button class="btn" onclick="doLogin()" id="btn-login" style="margin-top:4px">
+          <span id="btn-login-txt">Entrar · Anmelden</span>
+        </button>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--t3)">
+          PIN = data de nascimento DDMM · Geburtsdatum TTMM
+        </div>
       </div>
-      <button class="btn" onclick="doLogin()" id="btn-login"><span id="btn-login-txt">Entrar</span></button>
     </div>
 
     <div id="screen-wb" class="hidden">
